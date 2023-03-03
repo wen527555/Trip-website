@@ -1,0 +1,63 @@
+import json
+from mysql.connector import pooling
+
+# dbconfig = {
+#   "database": "taipei_trip",
+#   "password": "wh1999ne123",
+#   "user":"root",
+#   "host":"localhost"
+# }
+
+#建立連接池
+connection_pooling=pooling.MySQLConnectionPool( pool_name="mypool",
+                                                pool_size=5, 
+                                                pool_reset_session='True', 
+                                                database="taipei_trip",
+                                                password="wh1999ne123",
+                                                user="root",
+                                                host="localhost"
+                                                )
+
+#讀取JSON檔
+
+with open("data/taipei-attractions.json","r",encoding="utf-8") as file:
+    data=json.load(file)
+
+#取得景點清單
+lis=data["result"]["results"]
+
+#上傳景點資料到資料庫
+for view in lis:
+    name=view["name"]
+    # print(f'{name}')
+    lng=view["longitude"]
+    # print(f'{lng}')
+    lat=view["latitude"]
+    transport=view["direction"]
+    mrt=view["MRT"]
+    cat=view["CAT"]
+    description=view["description"]
+    address=view["address"]
+    images=view["file"]
+
+#將景點資料上傳資料庫
+# sql="INSERT INTO attractions (name, lng, lat,transport, mrt, cat, description,address,images) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+# val=(name, lng, lat,transport, mrt, cat, description,address,images)
+sql="INSERT INTO attractions (name) VALUES (%s)"
+val=(name)
+
+try:
+    #要求連接資料庫
+    with connection_pooling.get_connection() as connection_object:
+        mycursor=connection_object.cursor()
+        mycursor.exectue(sql,val)
+        connection_object.commit()
+        print("f'{name} upload successful!")
+except Exception as e:
+    print("f'{name} upload failed!Error:{e}")
+
+# finally:
+#     mycursor.close()
+#     connection_object.close()
+
+
