@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="../statics/index.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/index.css" />
     <title>Taipei-day-trip 台北一日遊</title>
   </head>
   <body>
@@ -22,23 +22,16 @@
         <div class="welcome_slogan1">輕鬆享受台北一日休閒</div>
         <div class="welcome_slogan2">探索每個角落，體驗城市的深度旅遊行程</div>
         <div class="welcome_search">
-          <input type="text" placeholder="輸入景點名稱查詢" />
-          <button class="search_btn">
-            <img src="../statics/picture/icon/icon_search.png" />
+          <input type="text" id="searchInput" placeholder="輸入景點名稱查詢" />
+          <button class="search_btn" id="search_btn">
+            <img src="../static/css/picture/icon_search.png" />
           </button>
+          <div class="category_list" id="category_list"></div>
         </div>
       </div>
     </header>
-    <main>
-      <div class="attrs_card">
-        <div class="attrs_img"></div>
-        <div class="attrs_name">平安鐘</div>
-        <div class="attrs_inf">
-          <div class="attrs_mrt">忠孝復興</div>
-          <div class="attrs_cat">公共藝術</div>
-        </div>
-      </div>
-    </main>
+    <main></main>
     <footer>COPYRIGHT © 2022 台北一日遊</footer>
+    <script src="../static/JS/index.js"></script>
   </body>
 </html>
