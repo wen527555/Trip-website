@@ -11,26 +11,6 @@ let nextPage, keyword, attractionId;
 //初始化loading狀態為false，表示沒有正在載入中的資料
 let isLoading = false;
 
-//網頁加載後立即獲取特定景點資訊
-const getAttractionsId = (attractionId) => {
-  fetch(`/attraction/${attractionId}`)
-    .then((respose) => respose.json())
-    .then((result) => {
-      const attraction = result.data;
-      //   const name = attraction.name;
-      //   const mrt = attraction.mrt;
-      //   const cat = attraction.category;
-      //   const description = attraction.description;
-      //   const address = attraction.address;
-      //   const transport = attraction.transport;
-      //   const images = attraction.images[0];
-      console.log(attraction);
-      //   console.log(name, mrt);
-    })
-    .catch((error) => console.error("Error", error));
-};
-getAttractionsId();
-
 //網頁加載後立即獲取 categoryList
 const getCategories = () => {
   fetch("/api/categories")
@@ -133,15 +113,15 @@ searchBtn.addEventListener("click", () => {
   }
   mainContainer.innerHTML = "";
   nextPage = 0;
-  //   getAttractionsKeyword("0", keyword);
   getAttractions("0");
 });
 
-function callback() {
+function callback(entries) {
+  const [entry] = entries;
   if (nextPage == null) {
     return;
   }
-  if (isLoading == false) {
+  if (!entry.isIntersecting && isLoading == false) {
     getAttractions(nextPage);
   }
 }
@@ -149,9 +129,8 @@ function callback() {
 const options = {
   root: null,
   rootMargin: "0px",
-  threshold: 0.5,
+  threshold: 0.3,
 };
 
-const observer = new IntersectionObserver(callback, options);
-
-observer.observe(footer);
+const footerObserver = new IntersectionObserver(callback, options);
+footerObserver.observe(footer);
