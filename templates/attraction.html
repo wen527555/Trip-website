@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../statics/index.css" />
+    <!-- <link rel="stylesheet" href="../static/css/index.css" /> -->
+    <link rel="stylesheet" href="../static/css/attraction.css" />
     <title>Taipei-day-trip 台北一日遊</title>
   </head>
   <body>
@@ -18,7 +19,77 @@
       </div>
     </nav>
 
-    <main></main>
+    <main>
+      <div class="topSection">
+        <div class="topSection_left">
+          <div class="attrs_img">
+            <button class="slide_btn slide_btn_left">
+              <img src="../static/css/picture/btn_leftArrow.png" />
+            </button>
+            <button class="slide_btn slide_btn_right">
+              <img src="../static/css/picture/btn_rightArrow.png" />
+            </button>
+            <div class="dots"></div>
+          </div>
+        </div>
+        <div class="topSection_right">
+          <div class="attrs_name"></div>
+          <div class="booking_text attrs_inf"></div>
+          <div class="booking_box">
+            <div class="title">訂購導覽行程</div>
+            <div class="booking_text">
+              以此景點為中心的一日行程，帶您探索城市角落故事
+            </div>
+            <div class="title">
+              選擇日期：
+              <input type="date" class="booking_date" id="booking_date" />
+            </div>
+            <div class="title booking_time">
+              選擇時間：
+              <div class="booking_text morning">
+                <input
+                  type="radio"
+                  id="booking_time_morning"
+                  name="time"
+                  value="morning"
+                  onclick="updatePrice()"
+                />
+                上半天
+              </div>
+              <div class="booking_text afternoon">
+                <input
+                  type="radio"
+                  id="booking_time_afternoon"
+                  name="time"
+                  value="afternoon"
+                  onclick="updatePrice()"
+                />
+                下半天
+              </div>
+            </div>
+            <div class="title booking_price">
+              導覽費用：
+              <div class="booking_text" id="price">新台幣2000元</div>
+            </div>
+            <button class="booking_btn">開始預約行程</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottomSection">
+        <hr />
+        <div class="attrs_description"></div>
+        <div class="address">
+          <div class="title">景點地址：</div>
+          <div class="attrs_address"></div>
+        </div>
+        <div class="transport">
+          <div class="title">交通方式：</div>
+          <div class="attrs_transport"></div>
+        </div>
+      </div>
+    </main>
     <footer>COPYRIGHT © 2022 台北一日遊</footer>
+    <script src="../static/JS/attraction.js"></script>
   </body>
 </html>

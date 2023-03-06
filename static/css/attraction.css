@@ -1,0 +1,355 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  font-family: "Noto Sans TC";
+  font-style: normal;
+  grid-template-rows: auto 1fr auto;
+  justify-self: center;
+  min-height: 100vh;
+}
+
+nav {
+  display: grid;
+  grid-row: 1/2;
+  grid-template-columns: auto minmax(300px, 1200px) auto;
+  position: sticky;
+  background-color: #ffffff;
+  z-index: 10;
+  top: 0;
+  height: 54px;
+}
+
+nav > .nav_box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column: 2/3;
+  align-content: center;
+}
+
+nav > .nav_box > .nav_title > a {
+  font-weight: 700;
+  font-size: 30px;
+  color: #448899;
+  text-decoration: none;
+  padding-left: 10px;
+}
+nav > .nav_box > .nav_items {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: end;
+  padding-right: 10px;
+}
+nav > .nav_box > .nav_items > .nav_item {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 13px;
+  color: #666666;
+  border: 0;
+  /*去邊*/
+  background-color: #ffffff;
+  padding-right: 10px;
+}
+main {
+  display: grid;
+  grid-row: 2/3;
+  grid-template-columns: auto minmax(300px, 1200px) auto;
+  grid-template-rows: 460px auto;
+  justify-content: center;
+  justify-self: center;
+
+  margin: 40px 0px;
+  color: #666666;
+}
+
+main > .topSection {
+  display: grid;
+  grid-column: 2/3;
+  grid-template-columns: 600px 600px;
+}
+
+main > .topSection > .topSection_left {
+  display: grid;
+  grid-column: 1/2;
+  justify-content: center;
+  justify-self: center;
+  border-radius: 5px;
+  margin: 15px 10px;
+}
+
+main > .topSection > .topSection_left > .attrs_img {
+  border: 1px solid #666666;
+  height: 406px;
+  width: 540px;
+  margin: 15px 10px;
+  border-radius: 5px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+
+main > .topSection > .topSection_left > .attrs_img > .slide {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 1s;
+}
+
+.slide_btn {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  z-index: 10;
+  border: none;
+}
+
+.slide_btn_left {
+  transform: translate(50%, -50%);
+  border-radius: 50%;
+}
+
+.slide_btn_right {
+  right: 6%;
+  transform: translate(50%, -50%);
+  border-radius: 50%;
+}
+
+.dots {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  z-index: 4;
+}
+
+.dots_dot {
+  border: none;
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  border-radius: 50%;
+  margin-right: 1.25rem;
+  cursor: pointer;
+  transition: all 0.5s;
+}
+
+.dots_dot--active {
+  background: #000000;
+  border: 1px solid #ffffff;
+  opacity: 1;
+}
+
+main > .topSection > .topSection_right {
+  display: grid;
+  grid-column: 2/3;
+  grid-template-rows: 33px 22px 302px;
+  grid-gap: 15px;
+  align-self: center;
+  margin: 15px;
+}
+
+main > .topSection > .topSection_right > .attrs_name {
+  font-weight: 700;
+  font-size: 24px;
+  grid-row: 1/2;
+}
+
+main > .topSection > .topSection_right > .attrs_inf {
+  grid-row: 2/3;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 16px;
+  margin: 5px 0px;
+}
+
+main > .booking_text {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 13px;
+}
+
+main > .topSection > .topSection_right > .booking_box {
+  display: grid;
+  grid-row: 3/4;
+  width: 550px;
+  height: 302px;
+  background: #e8e8e8;
+  border-radius: 5px;
+  padding: 20px 30px;
+}
+
+main > .topSection > .topSection_right > .booking_box > .booking_date {
+  width: 193px;
+  height: 35px;
+  background: #ffffff;
+  margin-right: 5px;
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+  margin: 4px;
+}
+
+main > .topSection > .topSection_right > .booking_box > .booking_time {
+  display: flex;
+  margin-right: 5px;
+}
+
+main
+  > .topSection
+  > .topSection_right
+  > .booking_box
+  > .booking_time
+  > .morning {
+  accent-color: #448899;
+}
+
+main
+  > .topSection
+  > .topSection_right
+  > .booking_box
+  > .booking_time
+  > .afternoon {
+  padding-left: 10px;
+  accent-color: #448899;
+}
+
+input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  vertical-align: text-bottom;
+  margin-bottom: 2px;
+}
+
+main > .topSection > .topSection_right > .booking_box > .booking_price {
+  display: flex;
+}
+
+main > .topSection > .topSection_right > .booking_box > .booking_btn {
+  width: 154px;
+  height: 36px;
+  background: #448899;
+  border-radius: 5px;
+  border: none;
+  color: #ffffff;
+  font-size: 19px;
+  line-height: 16px;
+  align-items: center;
+  text-align: center;
+}
+
+hr {
+  border: 1px solid #e8e8e8;
+  height: 1px;
+  max-width: 1200px;
+  margin-top: 30px;
+  margin-bottom: 50px;
+}
+
+main > .bottomSection {
+  grid-column: 2/3;
+  grid-row: 2/3;
+}
+
+main > .bottomSection > .attrs_description {
+  font-size: 16px;
+  margin: 10px 0px;
+  padding: 10px 0px;
+}
+
+main > .bottomSection > .address {
+  font-size: 16px;
+  margin: 10px 0px;
+  padding: 10px 0px;
+}
+
+main > .bottomSection > .transport {
+  font-size: 16px;
+  margin: 10px 0px;
+  padding: 10px 0px;
+}
+
+footer {
+  display: grid;
+  grid-row: 3/4;
+  background: #757575;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 13px;
+  justify-content: center;
+  align-content: center;
+  height: 104px;
+}
+
+@media (max-width: 1200px) {
+  nav > .nav_title > a {
+    padding-left: 20px;
+  }
+  nav > .nav_title > .nav_items {
+    padding-right: 20px;
+  }
+
+  main {
+    display: grid;
+    grid-template-columns: auto minmax(300px, 900px) auto;
+  }
+
+  main > .topSection {
+    grid-template-columns: 500px 450px;
+  }
+
+  main > .topSection > .topSection_left > .attrs_img {
+    height: auto;
+    width: 500px;
+    margin: 15px 10px;
+  }
+
+  main > .topSection > .topSection_right > .booking_box {
+    width: auto;
+  }
+
+  hr {
+    margin: 0px;
+  }
+}
+
+@media (max-width: 900px) {
+  main {
+    grid-template-rows: auto;
+    grid-template-columns: auto minmax(300px, 670px) auto;
+  }
+  main > .topSection {
+    display: block;
+  }
+
+  main > .topSection > .topSection_left {
+    width: auto;
+    margin: 30px 10px;
+  }
+
+  main > .topSection > .topSection_left > .attrs_img {
+    height: 406px;
+    width: 540px;
+  }
+
+  main > .topSection > .topSection_right {
+    width: auto;
+  }
+}
+
+@media (max-width: 670px) {
+  main {
+    grid-template-rows: auto;
+    grid-template-columns: auto minmax(300px, 540px) auto;
+  }
+}
