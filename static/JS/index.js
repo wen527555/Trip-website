@@ -5,10 +5,31 @@ const footer = document.querySelector("footer");
 const searchInput = document.getElementById("searchInput");
 const searchBtn = document.getElementById("search_btn");
 const categoryList = document.getElementById("category_list");
+const index_card = document.querySelector(".index_card");
 
-let nextPage, keyword;
+let nextPage, keyword, attractionId;
 //初始化loading狀態為false，表示沒有正在載入中的資料
 let isLoading = false;
+
+//網頁加載後立即獲取特定景點資訊
+const getAttractionsId = (attractionId) => {
+  fetch(`/attraction/${attractionId}`)
+    .then((respose) => respose.json())
+    .then((result) => {
+      const attraction = result.data;
+      //   const name = attraction.name;
+      //   const mrt = attraction.mrt;
+      //   const cat = attraction.category;
+      //   const description = attraction.description;
+      //   const address = attraction.address;
+      //   const transport = attraction.transport;
+      //   const images = attraction.images[0];
+      console.log(attraction);
+      //   console.log(name, mrt);
+    })
+    .catch((error) => console.error("Error", error));
+};
+getAttractionsId();
 
 //網頁加載後立即獲取 categoryList
 const getCategories = () => {
@@ -20,7 +41,7 @@ const getCategories = () => {
       });
       categoryList.innerHTML = categories.join("");
     })
-    .catch(console.error("Error", error));
+    .catch((error) => console.error("Error", error));
   categoryList.style.display = "none";
 };
 
@@ -81,13 +102,14 @@ function appendCards(result) {
     let mrt = attraction.mrt;
     let cat = attraction.category;
     let images = attraction.images[0];
+    let id = attraction.id;
 
-    let cards = `<div class="attrs_card">
-   <div class="attrs_img" style="background-image: url('${images}')"></div>
-   <div class="attrs_name">${name}</div>
-   <div class="attrs_inf">
-     <div class="attrs_mrt">${mrt}</div>
-     <div class="attrs_cat">${cat}</div>
+    let cards = `<div class="index_card" data-ID="${id}">
+   <div class="index_img" style="background-image: url('${images}')"></div>
+   <div class="index_name">${name}</div>
+   <div class="index_inf">
+     <div class="index_mrt">${mrt}</div>
+     <div class="index_cat">${cat}</div>
    </div>
  </div> `;
     mainContainer.insertAdjacentHTML("beforeend", cards);
@@ -95,6 +117,14 @@ function appendCards(result) {
   nextPage = result.nextPage;
   isLoading = false;
 }
+
+document.addEventListener("click", (event) => {
+  const card = event.target.closest(".index_card");
+  if (!card) return;
+
+  const id = card.dataset.id;
+  window.location.href = `/attraction/${id}`;
+});
 
 searchBtn.addEventListener("click", () => {
   keyword = searchInput.value.trim();
@@ -119,7 +149,7 @@ function callback() {
 const options = {
   root: null,
   rootMargin: "0px",
-  threshold: 0.3,
+  threshold: 0.5,
 };
 
 const observer = new IntersectionObserver(callback, options);
