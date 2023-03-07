@@ -14,6 +14,7 @@
         <div class="nav_items">
           <button class="nav_item nav_booking">排定行程</button>
           <button class="nav_item nav_signin">登入/註冊</button>
+          <button class="nav_item nav_register hidden">登出系統</button>
         </div>
       </div>
     </nav>
@@ -32,6 +33,39 @@
     </header>
     <main></main>
     <footer>COPYRIGHT © 2022 台北一日遊</footer>
+    <div class="model model_signIn hidden">
+      <div class="model_top"></div>
+      <button class="btn_close_model">
+        <img src="../static/css/picture/icon_close.png" />
+      </button>
+      <div class="model_title">登入會員帳號</div>
+      <form class="model_form">
+        <input type="email" placeholder="輸入電子信箱" />
+        <input type="password" placeholder="輸入密碼" />
+        <button class="model_btn model_btn_signIn">登入帳戶</button>
+        <button class="model_bottom" id="turnToRegister">
+          還沒有帳戶？點此註冊
+        </button>
+      </form>
+    </div>
+    <div class="model model_register hidden">
+      <div class="model_top"></div>
+      <button class="btn_close_model">
+        <img src="../static/css/picture/icon_close.png" />
+      </button>
+      <div class="model_title">註冊會員帳號</div>
+      <form class="model_form">
+        <input type="text" placeholder="輸入姓名" />
+        <input type="email" placeholder="輸入電子信箱" />
+        <input type="password" placeholder="輸入密碼" />
+        <button class="model_btn model_btn_register">註冊新帳戶</button>
+        <button class="model_bottom" id="turnToSignIn">
+          還沒有帳戶？點此登入
+        </button>
+      </form>
+    </div>
+    <div class="overlay hidden"></div>
     <script src="../static/JS/index.js"></script>
+    <script src="../static/JS/user.js"></script>
   </body>
 </html>
