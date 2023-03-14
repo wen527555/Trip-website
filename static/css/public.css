@@ -1,0 +1,149 @@
+#nav_register {
+  display: none;
+}
+
+#nav_signin {
+  display: block;
+}
+
+.model {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  width: 340px;
+  background: #ffffff;
+  box-shadow: 0px 4px 60px #aaaaaa;
+  border-radius: 6px;
+  transform: translate(-50%, -50%);
+  padding: 5rem 6rem;
+  z-index: 1000;
+  padding: 25px 10px 10px 10px;
+  display: none;
+}
+
+.model > .model_top {
+  position: absolute;
+  width: 340px;
+  height: 10px;
+  left: 0px;
+  top: 0px;
+  background: linear-gradient(270deg, #337788 0%, #66aabb 100%);
+  border-radius: 6px 6px 0px 0px;
+}
+
+.model > .btn_close_model {
+  position: absolute;
+  top: 25px;
+  right: 20px;
+  cursor: pointer;
+  font-size: 10px;
+  border: none;
+  background: none;
+}
+
+.model > .model_title {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 24px;
+  align-items: center;
+  text-align: center;
+  color: #666666;
+}
+
+.model > .model_form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin: 15px 5px;
+}
+
+.model > .model_form > input {
+  width: 310px;
+  height: 47px;
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  padding: 0px 10px;
+}
+
+.model_form input::placeholder {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 13px;
+  align-items: center;
+  color: #757575;
+}
+
+.model > .model_form > .model_btn {
+  width: 310px;
+  height: 47px;
+  background: #448899;
+  border-radius: 5px;
+  /* grid-column: 1 / span 2; */
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 16px;
+  align-items: center;
+  text-align: center;
+  color: #ffffff;
+  border: none;
+}
+
+.model > .model_form > .model_bottom {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 13px;
+  align-items: center;
+  text-align: center;
+  color: #666666;
+  border: none;
+  background: none;
+}
+
+.model > .model_form > .model_bottom > a {
+  color: #666666;
+  text-decoration: none;
+}
+
+/* .model > .model_form > .model_bottom > a:hover {
+    text-decoration: none;
+  } */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  backdrop-filter: blur(4px);
+  opacity: 0.25;
+  z-index: 100;
+  transition: all 0.5s;
+  display: none;
+}
+
+.registerMsg {
+  color: rgb(211, 53, 53);
+  text-align: center;
+  font-weight: 500;
+  margin: 5px;
+  display: none;
+}
+
+.signInMsg {
+  color: rgb(211, 53, 53);
+  text-align: center;
+  font-weight: 500;
+  margin: 5px;
+  display: none;
+}
+
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.show {
+  display: block;
+}

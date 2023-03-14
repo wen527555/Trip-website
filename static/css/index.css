@@ -52,6 +52,13 @@ nav > .nav_box > .nav_items > .nav_item {
   background-color: #ffffff;
   padding-right: 10px;
 }
+#nav_register {
+  display: none;
+}
+
+#nav_signin {
+  display: block;
+}
 
 header {
   display: grid;
