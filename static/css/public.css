@@ -1,3 +1,11 @@
+#nav_register {
+  display: none;
+}
+
+#nav_signin {
+  display: block;
+}
+
 .model {
   position: fixed;
   top: 30%;
