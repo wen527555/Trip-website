@@ -1,6 +1,6 @@
 import json
 from mysql.connector import pooling
-
+import json,re
 # dbconfig = {
 #   "database": "taipei_trip",
 #   "password": "wh1999ne123",
@@ -38,13 +38,15 @@ for view in lis:
     cat=view["CAT"]
     description=view["description"]
     address=view["address"]
-    images=view["file"]
+    image1=view["file"].split("https")
+    # print(f'{image1}')
+    image2 = ["https"+x for x in image1 if re.search("JPG", x)]
+    image3 = ["https"+x for x in image1 if re.search("jpg", x)]
+    images=",".join(image2+image3)
 
 #將景點資料上傳資料庫
-# sql="INSERT INTO attractions (name, lng, lat,transport, mrt, cat, description,address,images) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-# val=(name, lng, lat,transport, mrt, cat, description,address,images)
-sql="INSERT INTO attractions (name) VALUES (%s)"
-val=(name)
+sql="INSERT INTO attractions (name, lng, lat,transport, mrt, cat, description,address,images) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+val=(name, lng, lat,transport, mrt, cat, description,address,images)
 
 try:
     #要求連接資料庫
@@ -56,8 +58,8 @@ try:
 except Exception as e:
     print("f'{name} upload failed!Error:{e}")
 
-# finally:
-#     mycursor.close()
-#     connection_object.close()
+finally:
+    mycursor.close()
+    connection_object.close()
 
 

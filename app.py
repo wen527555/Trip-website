@@ -1,18 +1,15 @@
 from os import access
-from struct import pack
-from urllib import response
+import flask
 from flask import Flask
 from flask import request
 from flask import *
 from flask import render_template
 from flask import make_response 
 from flask import session
-import flask
 from mysql.connector import pooling
 from flask import jsonify 
 import math
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
-import jwt
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -169,28 +166,34 @@ def get_categories():
 @app.route('/api/user',methods=['POST'])
 def register():
     try:
+        #檢查使用者名稱是否存在
+        data=request.get_json()
+        print(data)
+        name=data["name"]
+        password=data["password"]
+        email=data["email"]
         connection_object=connection_pooling.get_connection()
         mycursor=connection_object.cursor(dictionary=True)
-        #檢查使用者名稱是否存在
-        username=request.json.get("email")
-        mycursor.execute("SELECT email FROM user WHERE email=%s",(username,))
+        mycursor.execute("SELECT email FROM user WHERE email=%s",[email,])
         user=mycursor.fetchone()
-        if user:
-            return {"error":True,"message":"此email已註冊過，請登入"}
-        #使用者名稱不存在，新增使用者
-        name=request.json.get("name")
-        password=request.json.get("password")
-        if not name or not password or not username:
-            return{"error":True,"message":"所有欄位皆須填寫，請勿空白"}
-        hashed_password = generate_password_hash(password, method='sha256')
-        mycursor.execute("INSERT INTO email  user (name,email,password) VALUES( %s, %s, %s)",(name,username,hashed_password))
-        connection_object.commit()
+        if user is None:
+            hashed_password = generate_password_hash(password, method='sha256')
+            mycursor.execute("INSERT INTO user (name,email,password) VALUES( %s, %s, %s)",[name,email,hashed_password])
+            connection_object.commit()  
+            print("註冊成功")          
+            return jsonify({"ok":True}),200
 
-        #使用PyJWT 套件生成的JWT token，並回傳給前端
-        access_token=create_access_token(identity=username)
-        response=make_response(jsonify({"ok":True,"access_token":access_token}))
-        response.set_cookie("access_token", access_token, httponly=True, secure=True)
-        return response
+        #使用者名稱不存在，新增使用者
+        elif not name or not password or not email:
+            return{"error":True,"message":"所有欄位皆須填寫，請勿空白"}
+        else:
+            response={
+                "error":True,
+                "message":"此email已註冊過，請登入"
+            }
+            print("註冊失敗，此email已註冊過")   
+            return jsonify(response),400
+            
 
     except Exception as e:
         return {"error": True, "message": str(e)}
@@ -200,36 +203,56 @@ def register():
         connection_object.close()
 
 
-@app.route('/api/user/auth',methods=['GET','PUT','DELETE'])
-@jwt_required(optional=True)
+@app.route('/api/user/auth',methods=['GET'])
+@jwt_required()
+def auth_get():
+    try:
+        connection_object=connection_pooling.get_connection()
+        mycursor=connection_object.cursor(dictionary=True)
+        email=get_jwt_identity()
+        mycursor.execute("SELECT id,name,email FROM user WHERE email=%s",[email])
+        user=mycursor.fetchone()
+        response= jsonify({"data":user}) 
+        return response
+        
+
+    except Exception as e:
+            return {"error": True, "message": str(e)},500
+
+
+    finally:
+        mycursor.close()
+        connection_object.close()
+
+@app.route('/api/user/auth',methods=['PUT','DELETE'])
+
 def auth():
     try:
         connection_object=connection_pooling.get_connection()
         mycursor=connection_object.cursor(dictionary=True) 
+
         # 會員登入
         if request.method=='PUT':
-            email=request.json.get("email")
-            password=request.json.get("password")
+            data=request.get_json()
+            print(data)
+            password=data["password"]
+            email=data["email"]
             if not email or not password:
                 return {"error":True,"message":"請輸入完整的email及密碼"}
-            mycursor.execute("SELECT * FROM user WHERE email=%s,",(email,))
-            user=mycursor.fetchone()
-            if not user:
+            mycursor.execute("SELECT * FROM user WHERE email=%s",[email])
+            results=mycursor.fetchone()
+            if not results:
                 return {"error":True,"message":"無此使用者，請先註冊"}
-            elif not check_password_hash(user["password"],password):
+            elif not check_password_hash(results["password"],password):
                 return {"error":True,"message":"密碼錯誤"}
+            elif results:
 
-            access_token=create_access_token(identity=email)
-            response=make_response({"ok":True})
-            response.set_cookie("access_token", access_token, httponly=True, secure=True)
-            return response
+                access_token=create_access_token(identity=email)
+                response=make_response({"ok":True})
+                print(response)
+                response.set_cookie("access_token", access_token,  secure=False, domain='172.20.10.12',path='/')
+                return response
 
-        # 取得當前會員資訊
-        elif request.method=='GET':
-            email=get_jwt_identity()   
-            mycursor.execute("SELECT id,name,email FROM user WHERE email=%s",(email,))
-            user=mycursor.fetchone()
-            return jsonify({"data":user})
 
         # 會員登出
         elif request.method=='DELETE':
@@ -244,61 +267,10 @@ def auth():
         mycursor.close()
         connection_object.close()
 
-# @app.route('/api/user/auth',methods=['GET'])
-# def get_user():
-#     try:
-#         connection_object=connection_pooling.get_connection()
-#         mycursor=connection_object.cursor(dictionary=True) 
-#         email=get_jwt_identity()   
-#         mycursor.execute("SELECT id,name,email FROM user WHERE email=%s",(email,))
-#         user=mycursor.fetchone()
-#         return jsonify({"data":user})
-       
-#     except Exception as e:
-#         # 將錯誤訊息轉換為字符串，然後返回
-#         return {"error": True, "message": str(e)}
-
-#     finally:
-#         #關閉SQL資料庫連接
-#         mycursor.close()
-#         connection_object.close()
-
-# @app.route('/api/user/auth',methods=['PUT'])
-# def logIn():
-#     try:
-#         connection_object=connection_pooling.get_connection()
-#         mycursor=connection_object.cursor(dictionary=True) 
-#         email=request.json.get("email")
-#         password=request.json.get("password")
-#         if not email or not password:
-#             return {"error":True,"message":"請輸入完整的email及密碼"}
-#         mycursor.execute("SELECT * FROM user WHERE email=%s,",(email,))
-#         user=mycursor.fetchone()
-#         if not user:
-#             return {"error":True,"message":"無此使用者，請先註冊"}
-#         elif not check_password_hash(user["password"],password):
-#             return {"error":True,"message":"密碼錯誤"}
-
-#         access_token=create_access_token(identity=email)
-#         response=make_response({"ok":True})
-#         response.set_cookie("access_token", access_token, httponly=True, secure=True)
-#         return response
-
-#     except Exception as e:
-#         # 將錯誤訊息轉換為字符串，然後返回
-#         return {"error": True, "message": str(e)}
-
-#     finally:
-#         #關閉SQL資料庫連接
-#         mycursor.close()
-#         connection_object.close()    
 
 
-
-# @app.route('/api/user/auth',methods=['DELETE'])
-# def logOut():
-#     response=make_response({"ok":True})
-#     response.delete_cookie("access_token")
-#     return response
 
 app.run(host='0.0.0.0',port=3000,debug=True)
+
+
+
