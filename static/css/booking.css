@@ -1,9 +1,3 @@
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-
 body {
   display: grid;
   font-family: "Noto Sans TC";
@@ -53,7 +47,9 @@ nav > .nav_box > .nav_items > .nav_item {
   /*去邊*/
   background-color: #ffffff;
   padding-right: 10px;
+  cursor: pointer;
 }
+
 main {
   display: grid;
   grid-row: 2/3;
@@ -109,6 +105,8 @@ main {
   grid-column: 1;
   justify-content: center;
   justify-self: center;
+  background-size: cover;
+  background-position: center;
 }
 
 .order_Section1 > .order_Section1_middle {
@@ -124,6 +122,7 @@ main {
 
 .order_Section1 > .order_deletebtn {
   grid-column: 3;
+  cursor: pointer;
 }
 
 .order_Section2 {
@@ -170,7 +169,7 @@ main {
   margin-left: 10px;
 }
 
-.order_Section4 > .order_Section4_right > .orderBtn {
+.order_Section4 > .order_Section4_right > .payment_btn {
   font-weight: 400;
   font-size: 19px;
   line-height: 16px;
@@ -204,6 +203,16 @@ hr {
   margin-bottom: 20px;
 }
 
+.noBooking {
+  justify-content: center;
+  align-content: center;
+  color: #757575;
+  font-weight: 700;
+  font-size: 20px;
+  grid-column: 2/3;
+  display: grid;
+}
+
 footer {
   display: grid;
   grid-row: 3/4;
@@ -215,4 +224,63 @@ footer {
   justify-content: center;
   align-content: center;
   height: 104px;
+}
+
+@media (max-width: 1200px) {
+  nav > .nav_title > a {
+    padding-left: 20px;
+  }
+  nav > .nav_title > .nav_items {
+    padding-right: 20px;
+  }
+
+  main {
+    display: grid;
+    grid-template-columns: auto minmax(300px, 900px) auto;
+  }
+
+  main > .order_Section1 {
+    grid-template-columns: 400px auto 80px;
+  }
+
+  .order_Section1 > .order_deletebtn {
+    position: relative;
+  }
+  .order_Section1 > .order_deletebtn > img {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+
+  hr {
+    margin: 0px;
+  }
+}
+
+@media (max-width: 900px) {
+  main {
+    grid-template-rows: auto;
+    grid-template-columns: auto minmax(300px, 670px) auto;
+  }
+  main > .order_Section1 {
+    display: block;
+  }
+
+  .order_Section1 > .order_image {
+    width: 450px;
+    height: 334px;
+    margin: 30px 10px;
+  }
+
+  .order_Section1 > .order_Section1_middle {
+    margin: 30px 20px 30px 40px;
+    grid-gap: 30px;
+  }
+}
+
+@media (max-width: 670px) {
+  main {
+    grid-template-rows: auto;
+    grid-template-columns: auto minmax(300px, 540px) auto;
+  }
 }

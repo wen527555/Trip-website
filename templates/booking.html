@@ -13,46 +13,42 @@
       <div class="nav_box">
         <div class="nav_title"><a href="/">台北一日遊</a></div>
         <div class="nav_items">
-          <button class="nav_item nav_booking" id="nav_booking">
-            排定行程
-          </button>
+          <button class="nav_item" id="nav_booking">排定行程</button>
           <button class="nav_item" id="nav_signin">登入/註冊</button>
           <button class="nav_item" id="nav_register">登出系統</button>
         </div>
       </div>
     </nav>
-    <main>
-      <div class="order_Section order_Section1">
-        <div class="order_username">您好，username，待預定的行程如下：</div>
+    <main id="main_booking">
+      <!-- <div class="order_Section order_Section1">
+        <div class="order_username"></div>
         <div class="order_image"></div>
         <div class="order_Section1_middle">
-          <div class="order_name">台北一日遊：平安鐘</div>
+          <div class="order_name"></div>
 
           <div class="order_title2">
             日期：
-            <div class="order_text order_date" id="order_date">2021-04-23</div>
+            <div class="order_text order_date" id="order_date"></div>
           </div>
           <div class="order_title2">
             時間：
-            <div class="order_text order_time" id="order_time">
-              早上9點到下午4點
-            </div>
+            <div class="order_text order_time" id="order_time"></div>
           </div>
           <div class="order_title2">
             費用：
-            <div class="order_text order_price" id="order_price">
-              新台幣2000元
-            </div>
+            <div class="order_text order_price" id="order_price"></div>
           </div>
           <div class="order_title2">
             地點：
-            <div class="order_text order_address" id="order_address">
-              台北市大安區忠孝東路4段
-            </div>
+            <div class="order_text order_address" id="order_address"></div>
           </div>
         </div>
         <div class="order_deletebtn">
-          <img src="../static/css/picture/icon_delete.png" />
+          <img
+            src="../static/css/picture/icon_delete.png"
+            id="order_deletebtn"
+            onclick="deleteBooking()"
+          />
         </div>
       </div>
       <div class="order_Section order_Section2">
@@ -100,12 +96,10 @@
       <div class="order_Section order_Section4">
         <hr />
         <div class="order_Section4_right">
-          <div class="order_totalPrice" id="order_totalPrice">
-            總價：新台幣2000元
-          </div>
-          <button class="orderBtn">確認訂購並付款</button>
+          <div class="order_totalPrice" id="order_totalPrice"></div>
+          <button class="payment_btn">確認訂購並付款</button>
         </div>
-      </div>
+      </div> -->
     </main>
     <footer>COPYRIGHT © 2022 台北一日遊</footer>
     <div class="model model_signIn" id="model_signIn">
@@ -172,5 +166,6 @@
     </div>
     <div class="overlay"></div>
     <script src="../static/JS/user.js"></script>
+    <script src="../static/JS/booking.js"></script>
   </body>
 </html>

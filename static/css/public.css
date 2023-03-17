@@ -6,6 +6,16 @@
   display: block;
 }
 
+button:hover {
+  background-color: #e8e8e8;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
 .model {
   position: fixed;
   top: 30%;
