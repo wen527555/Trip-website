@@ -16,27 +16,17 @@ const register_email = document.getElementById("register_email");
 const register_password = document.getElementById("register_password");
 const register_name = document.getElementById("register_name");
 
-function clear_all() {
-  register_name.value === "";
-  register_email.value === "";
-  register_password.value === "";
-  logIn_email.value === "";
-  logIn_password.value === "";
-  signInMsg.value === "";
-  registerMsg.value === "";
-  registerMsg.style.display = "none";
-  hasMsg = false;
-}
-
 //model
 const turnToRegister = function () {
   signInModel.classList.remove("show");
   registerModel.classList.add("show");
+  clear_all();
 };
 
 const turnToSignIn = function () {
   registerModel.classList.remove("show");
   signInModel.classList.add("show");
+  clear_all();
 };
 
 const closeModel = function () {
@@ -51,6 +41,18 @@ const openSignInFrom = function () {
   overlay.classList.add("show");
 };
 
+function clear_all() {
+  register_name.value = "";
+  register_email.value = "";
+  register_password.value = "";
+  logIn_email.value = "";
+  logIn_password.value = "";
+  signInMsg.value = "";
+  registerMsg.value = "";
+  registerMsg.style.display = "none";
+  hasMsg = false;
+}
+
 registerLink.addEventListener("click", turnToRegister);
 signInLink.addEventListener("click", turnToSignIn);
 btnCloseModel.forEach((btn) => btn.addEventListener("click", closeModel));
@@ -59,44 +61,28 @@ btnOpenSignInFrom.addEventListener("click", openSignInFrom);
 
 const registerBtn = document.getElementById("register_button");
 const registerMsg = document.querySelector(".registerMsg");
-
 let hasMsg = false;
 
 //會員註冊驗證
 function registerSystem() {
-  if (
-    register_name.value === "" ||
-    register_email.value === "" ||
-    register_password.value === ""
-  ) {
-    registerMsg.style.display = "block";
-    registerMsg.textContent = "所有欄位皆須填寫，請勿空白";
-  } else {
-    fetch(`/api/user`, {
-      method: "POST",
-      body: JSON.stringify({
-        name: register_name.value,
-        email: register_email.value,
-        password: register_password.value,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
+  fetch(`/api/user`, {
+    method: "POST",
+    body: JSON.stringify({
+      name: register_name.value,
+      email: register_email.value,
+      password: register_password.value,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      registerMsg.style.display = "block";
+      registerMsg.textContent = data["message"];
+      hasMsg = true;
     })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data["ok"]) {
-          registerMsg.style.display = "block";
-          registerMsg.textContent = "註冊成功！";
-          hasMsg = true;
-        } else {
-          registerMsg.style.display = "block";
-          registerMsg.textContent = data["message"];
-          hasMsg = true;
-        }
-      })
-      .catch((error) => console.log(error));
-  }
+    .catch((error) => console.log(error));
 }
 registerBtn.addEventListener("click", registerSystem);
 
@@ -119,11 +105,8 @@ function logInSystem() {
   })
     .then((response) => response.json())
     .then((data) => {
+      console.log(data);
       if (data["ok"]) {
-        // console.log("登入成功");
-        // signInMsg.style.display = "block";
-        // signInMsg.textContent = "登入成功";
-
         location.reload();
       } else {
         signInMsg.style.display = "block";
@@ -191,7 +174,6 @@ function getCurrentUser() {
       }
     })
     .then((data) => {
-      console.log(data["data"]);
       if (data["data"] != null) {
         btnSignOut.style.display = "block";
         btnOpenSignInFrom.style.display = "none";
@@ -206,4 +188,3 @@ function getCurrentUser() {
     });
 }
 getCurrentUser();
-// window.addEventListener("load", getCurrentUser);

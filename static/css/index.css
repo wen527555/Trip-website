@@ -52,13 +52,6 @@ nav > .nav_box > .nav_items > .nav_item {
   background-color: #ffffff;
   padding-right: 10px;
 }
-#nav_register {
-  display: none;
-}
-
-#nav_signin {
-  display: block;
-}
 
 header {
   display: grid;
@@ -221,6 +214,7 @@ footer {
   line-height: 13px;
   justify-content: center;
   align-content: center;
+  height: 104px;
 }
 
 @media (max-width: 1200px) {

@@ -98,7 +98,7 @@ function appendCards(result) {
   isLoading = false;
 }
 
-document.addEventListener("click", (event) => {
+const getAttractionCard = document.addEventListener("click", (event) => {
   const card = event.target.closest(".index_card");
   if (!card) return;
 
