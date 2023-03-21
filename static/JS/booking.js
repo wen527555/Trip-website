@@ -1,6 +1,5 @@
 "use strict";
 const order_info = document.querySelectorAll(".order_info");
-// import { openSignInFrom } from "./user.js";
 
 function getBooking() {
   if (!token) {
@@ -226,7 +225,7 @@ const contactPhone = document.querySelector("#contact_phone");
 const contactName = document.querySelector("#contact_name");
 const phoneRegex = /^09\d{8}$/;
 const emailRegex = /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/;
-const nameRegex = /^[\u4E00-\u9FA5]{1,8}$|^[a-zA-Z]{1,}\s[a-zA-Z]{1,}$/;
+const nameRegex = /^[\u4E00-\u9FA5a-zA-Z]{2,10}$/;
 
 const checkContactStatus = (input, regex) => {
   const image = input.nextElementSibling;
@@ -336,6 +335,16 @@ function onSubmit(event) {
   });
 }
 
+const notifyBox = document.querySelector(".notify_box");
+const btnCloseNotify = document.querySelector(".btn_close_notify");
+const notifyMsg = document.querySelector(".notify_message");
+
+//付款狀態通知
+const closeNotify = function () {
+  notifyBox.classList.remove("show");
+};
+btnCloseNotify.addEventListener("click", closeNotify);
+
 //建立新的付款訂單
 function createOrder(orders) {
   fetch(`/api/orders`, {
@@ -347,13 +356,20 @@ function createOrder(orders) {
     },
   })
     .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      const orderNumber = data.orderNumber;
-      if (data.payment.status === 0) {
-        window.location.href = `/thankyou/?number=${orderNumber}`;
+    .then((result) => {
+      console.log(result.data);
+      const orderData = result.data;
+      const orderNumber = orderData.number;
+      console.log(orderData.payment.status);
+      if (orderData.payment.status === 0) {
+        window.location.href = `/thankyou?number=${orderNumber}`;
+        // notifyBox.classList.add("show");
+        // overlay.classList.add("show");
+        // notifyMsg.innerText = "訂單編號：" + orderNumber + "\n 付款成功！";
       } else {
-        alert("orderNumber" / n, "付款失敗");
+        notifyBox.classList.add("show");
+        notifyMsg.innerText =
+          "訂單編號：" + orderNumber + "\n 付款失敗，\n 請檢查付款資訊是否正確";
       }
     })
     .catch((error) => {

@@ -16,6 +16,7 @@ import time
 import random
 import string
 import requests
+from datetime import datetime
 
 
 connection_pooling=pooling.MySQLConnectionPool(
@@ -168,7 +169,6 @@ def register():
     try:
         #檢查使用者名稱是否存在
         data=request.json
-        print(data)
         name=data["name"]
         password=data["password"]
         email=data["email"]
@@ -207,7 +207,6 @@ def auth_get():
             if email:
                 mycursor.execute("SELECT id,name,email FROM user WHERE email=%s",[email])
                 user=mycursor.fetchone()
-                print("user")
                 response= jsonify({"data":user})
                 return response
             else:
@@ -229,7 +228,6 @@ def auth():
             # 會員登入
             if request.method=='PUT':
                 data=request.get_json()
-                print(data)
                 password=data["password"]
                 email=data["email"]
                 if not email or not password:
@@ -294,7 +292,6 @@ def booking_get():
                         "image":new_images,
                         }                        
                     }
-                    # print(booking_info)
                     return jsonify({"data":booking_info}),200      
                 else:
                     return jsonify({"data":None,"message":"沒有預定的行程"})           
@@ -324,7 +321,6 @@ def booking_post():
         time=data["time"]
         price=data["price"]
         attractionId=data["attractionId"]
-        print(attractionId,date,time,price, user_email)
         if not date or not time or not price or not attractionId :
             return jsonify({"error":True,"message":"所有欄位皆須填寫，請勿空白"}),400
         connection_object=connection_pooling.get_connection()
@@ -348,7 +344,6 @@ def booking_post():
                     "time":time,
                     "price":price,
                 }
-                print(data)
                 return jsonify({"data":data}),200
 
             else:
@@ -423,7 +418,6 @@ def order_post():
         connection_object=connection_pooling.get_connection()
         with connection_object.cursor(dictionary=True) as mycursor:
             orderNumber=time.strftime("%Y%m%d%H%M%S")+''.join(random.choices(string.ascii_letters + string.digits, k=6))
-            print(orderNumber)
             mycursor.execute("INSERT INTO orders (order_number, prime, attraction_id, attraction_name, attraction_address, attraction_images, date, time, price, contact_name, contact_email, contact_phone, payment_status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (orderNumber,prime ,attraction["id"], attraction["name"], attraction["address"], attraction["image"], trip["date"], trip["time"], totalPrice, contactName, contactEmail, contactPhone, '未付款'))
             connection_object.commit()
             response = requests.post('https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime',
@@ -448,11 +442,11 @@ def order_post():
             if  response.status_code == 200 and response.json()['status'] == 0:
                 mycursor.execute("UPDATE orders SET payment_status='已付款' WHERE order_number=%s ",(orderNumber,))
                 connection_object.commit()
-                # mycursor.execute("SELECT id FROM user WHERE email=%s",[user_email])
-                # result=mycursor.fetchone()       
-                # user_id=result["id"]
-                # mycursor.execute("DELETE FROM booking WHERE user_id=%s",[user_id])
-                # connection_object.commit()
+                mycursor.execute("SELECT id FROM user WHERE email=%s",[user_email])
+                result=mycursor.fetchone()       
+                user_id=result["id"]
+                mycursor.execute("DELETE FROM booking WHERE user_id=%s",[user_id])
+                connection_object.commit()
             # 回傳訂單編號和付款狀態
                 return jsonify({
                     'data': {
@@ -486,10 +480,11 @@ def order_post():
 
 
 #根據訂單編號取得訂單資訊
-@app.route('/api/orders/<orderNumber>',methods=['GET'])
+@app.route('/api/order/<orderNumber>',methods=['GET'])
 @jwt_required()
 def order_get(orderNumber):
     try:
+        print(orderNumber)
         user_email=get_jwt_identity()
         if not user_email:
             return jsonify({"error":True,"message":"未登入，拒絕存取"}),403
@@ -497,37 +492,31 @@ def order_get(orderNumber):
         with connection_object.cursor(dictionary=True) as mycursor:
             mycursor.execute("SELECT * FROM orders WHERE order_number=%s ",(orderNumber,))
             order_data=mycursor.fetchone()
-            if order_data:
-                new_images=[]
-                images=order_data["images"].split(",")
-                for image in images:
-                    new_images.append(image)         
-                date=order_data["date"].strftime('%Y-%-m-%-d')
-                price=int(order_data["price"])
+            if order_data:       
                 contact={
                     "name":order_data["contact_name"],
                     "email":order_data["contact_email"],
-                    "phone":order_data["contact_phone "],
+                    "phone":order_data["contact_phone"],
                 }
                 attraction={
                     "id":order_data["attraction_id"],
                     "name":order_data["attraction_name"],
                     "address":order_data["attraction_address"],
-                    "image":new_images,
+                    "image":order_data["attraction_images"],
                 }
                 order_info={
                     "number":orderNumber,
-                    "price":price,
+                    "price":order_data["price"],
                     "trip":{
                         "attraction":attraction,
-                        "date":date,
+                        "date":order_data["date"],
                         "time":order_data["time"],
                     },
                     "contact":contact
                     ,
                     "status":1                     
                 }
-                # print(booking_info)
+                print(order_info)
                 return jsonify({"data":order_info}),200
 
     except Exception as e:

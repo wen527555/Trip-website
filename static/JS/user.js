@@ -117,24 +117,47 @@ document.addEventListener("DOMContentLoaded", getCurrentUser);
 
 //會員註冊驗證
 function registerSystem() {
-  fetch(`/api/user`, {
-    method: "POST",
-    body: JSON.stringify({
-      name: register_name.value,
-      email: register_email.value,
-      password: register_password.value,
-    }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      registerMsg.style.display = "block";
-      registerMsg.textContent = data["message"];
-      hasMsg = true;
+  const emailRegex = /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/;
+  const nameRegex = /^[\u4E00-\u9FA5a-zA-Z]{2,10}$/;
+  const passwordPegex = /^(?=.*[A-Z]).{8,15}$/;
+  if (register_email.value !== "" && !emailRegex.test(register_email.value)) {
+    registerMsg.style.display = "block";
+    registerMsg.textContent = "信箱格式錯誤，請重新輸入";
+    hasMsg = true;
+  } else if (
+    register_name.value !== "" &&
+    !nameRegex.test(register_name.value)
+  ) {
+    registerMsg.style.display = "block";
+    registerMsg.textContent = "姓名格式須包含2~10個中文或英文字";
+    hasMsg = true;
+  } else if (
+    register_password.value !== "" &&
+    !passwordPegex.test(register_password.value)
+  ) {
+    registerMsg.style.display = "block";
+    registerMsg.textContent = "密碼格式至少為8個字且需含一個大寫英文字母";
+    hasMsg = true;
+  } else {
+    fetch(`/api/user`, {
+      method: "POST",
+      body: JSON.stringify({
+        name: register_name.value,
+        email: register_email.value,
+        password: register_password.value,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
     })
-    .catch((error) => console.log(error));
+      .then((response) => response.json())
+      .then((data) => {
+        registerMsg.style.display = "block";
+        registerMsg.textContent = data["message"];
+        hasMsg = true;
+      })
+      .catch((error) => console.log(error));
+  }
 }
 registerBtn.addEventListener("click", registerSystem);
 
