@@ -20,86 +20,60 @@
       </div>
     </nav>
     <main id="main_booking">
-      <!-- <div class="order_Section order_Section1">
-        <div class="order_username"></div>
-        <div class="order_image"></div>
-        <div class="order_Section1_middle">
-          <div class="order_name"></div>
-
-          <div class="order_title2">
-            日期：
-            <div class="order_text order_date" id="order_date"></div>
-          </div>
-          <div class="order_title2">
-            時間：
-            <div class="order_text order_time" id="order_time"></div>
-          </div>
-          <div class="order_title2">
-            費用：
-            <div class="order_text order_price" id="order_price"></div>
-          </div>
-          <div class="order_title2">
-            地點：
-            <div class="order_text order_address" id="order_address"></div>
-          </div>
-        </div>
-        <div class="order_deletebtn">
-          <img
-            src="../static/css/picture/icon_delete.png"
-            id="order_deletebtn"
-            onclick="deleteBooking()"
-          />
-        </div>
-      </div>
-      <div class="order_Section order_Section2">
+      <div class="order_Section order_info hidden" id="order_Section2">
         <hr />
         <div class="order_title">您的聯絡資訊</div>
         <form class="contact_form">
           <div class="input_box">
             <label class="order_text" for="contact_name">聯絡姓名：</label>
-            <input type="text" id="contact_name" />
+            <input type="text" class="content_input" id="contact_name" />
+            <img class="input-image" >
           </div>
           <div class="input_box">
             <label class="order_text" for="contact_email">聯絡信箱：</label>
-            <input type="email" id="contact_email" />
+            <input type="email" class="content_input" id="contact_email" />
+            <img class="input-image" >
           </div>
           <div class="input_box">
             <label class="order_text" for="contact_phone">手機號碼：</label>
-            <input type="text" id="contact_phone" />
+            <input type="tel" class="content_input" id="contact_phone" />
+            <img class="input-image" >
           </div>
         </form>
         <div class="order_text2">
           請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。
         </div>
       </div>
-      <div class="order_Section order_Section3">
+      <div class="order_Section order_info hidden" id="order_Section3">
         <hr />
         <div class="order_title">信用卡付款資訊</div>
-        <form class="creditCard_number">
-          <div class="input_box">
-            <label class="order_text" for="creditCard_number">卡片號碼：</label>
-            <input type="text" id="creditCard_number" />
+
+        <form class="creditCard_form">
+          <div class="order_text card_input"">
+            卡片號碼：
+            <div class="tpfield " id="card-number"></div>
+            <img class="input-image"  >
           </div>
-          <div class="input_box">
-            <label class="order_text" for="creditCard_date">過期時間：</label>
-            <input type="email" id="creditCard_date" />
+          <div class="order_text card_input" >
+            過期時間：
+            <div class="tpfield " id="card-expiration-date"></div>
+            <img class="input-image"  >
           </div>
-          <div class="input_box">
-            <label class="order_text" for="creditCard_password"
-              >驗證密碼：</label
-            >
-            <input type="text" id="creditCard_password" />
+          <div class="order_text card_input" >
+            驗證密碼：
+            <div class="tpfield" id="card-ccv"></div>
+            <img class="input-image"  >
           </div>
         </form>
       </div>
 
-      <div class="order_Section order_Section4">
+      <div class="order_Section order_info hidden" id="order_Section4">
         <hr />
         <div class="order_Section4_right">
           <div class="order_totalPrice" id="order_totalPrice"></div>
-          <button class="payment_btn">確認訂購並付款</button>
+          <button class="payment_btn" >確認訂購並付款</button>
         </div>
-      </div> -->
+      </div>
     </main>
     <footer>COPYRIGHT © 2022 台北一日遊</footer>
     <div class="model model_signIn" id="model_signIn">
@@ -164,8 +138,18 @@
         </div>
       </form>
     </div>
+    <div class="notify_box">
+      <div class="notify_top"></div>
+      <button class="btn_close_notify">
+        <img src="../static/css/picture/icon_close.png" />
+      </button>
+      <div class="notify_title">系統通知</div>
+      <div class="notify_message"></div>
+    </div>
     <div class="overlay"></div>
+    <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.14.0"></script>
     <script src="../static/JS/user.js"></script>
     <script src="../static/JS/booking.js"></script>
   </body>
 </html>
+

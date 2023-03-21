@@ -1,0 +1,135 @@
+body {
+  display: grid;
+  font-family: "Noto Sans TC";
+  font-style: normal;
+  grid-template-rows: auto 1fr auto;
+  justify-self: center;
+  min-height: 100vh;
+}
+
+nav {
+  display: grid;
+  grid-row: 1/2;
+  grid-template-columns: auto minmax(300px, 1200px) auto;
+  position: sticky;
+  background-color: #ffffff;
+  z-index: 10;
+  top: 0;
+  height: 54px;
+}
+
+nav > .nav_box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column: 2/3;
+  align-content: center;
+}
+
+nav > .nav_box > .nav_title > a {
+  font-weight: 700;
+  font-size: 30px;
+  color: #448899;
+  text-decoration: none;
+  padding-left: 10px;
+}
+nav > .nav_box > .nav_items {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: end;
+  padding-right: 10px;
+}
+nav > .nav_box > .nav_items > .nav_item {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 13px;
+  color: #666666;
+  border: 0;
+  background-color: #ffffff;
+  padding-right: 10px;
+  cursor: pointer;
+}
+
+main {
+  display: grid;
+  grid-row: 2/3;
+  grid-template-columns: auto minmax(300px, 1200px) auto;
+  color: #666666;
+  margin: 20px 0px;
+  grid-template-rows: 150px 300px 160px;
+  grid-gap: 10px;
+}
+
+.thank_top {
+  display: grid;
+  grid-column: 2/3;
+  margin: 10px 0px;
+}
+
+.thank_title {
+  display: grid;
+  font-weight: 700;
+  font-size: 24px;
+  color: #448899;
+  justify-content: center;
+  align-content: center;
+}
+
+.thank_text {
+  font-weight: 500;
+  font-size: 18px;
+}
+.thank_title2 {
+  font-weight: 700;
+  font-size: 20px;
+  display: flex;
+}
+
+.thank_info {
+  display: grid;
+  grid-column: 2/3;
+  padding-left: 50px;
+  margin: 20px 0px 20px 20px;
+  border-bottom: 1px solid #ebebeb;
+}
+
+.thank_contact {
+  display: grid;
+  grid-column: 2/3;
+  padding-left: 50px;
+  margin-left: 20px;
+}
+
+.thank_bottom {
+  display: grid;
+  grid-column: 2/3;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.btnBackIndex {
+  display: grid;
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 16px;
+  color: #ffffff;
+  width: 173px;
+  height: 36px;
+  background: #448899;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  align-items: center;
+}
+
+footer {
+  display: grid;
+  grid-row: 3/4;
+  background: #757575;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 13px;
+  justify-content: center;
+  align-content: center;
+  height: 104px;
+}

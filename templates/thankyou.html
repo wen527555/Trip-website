@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="../static/css/public.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/thankyou.css" />
+    <title>Taipei-day-trip 台北一日遊</title>
+  </head>
+  <body>
+    <nav>
+      <div class="nav_box">
+        <div class="nav_title"><a href="/">台北一日遊</a></div>
+        <div class="nav_items">
+          <button class="nav_item" id="nav_booking">排定行程</button>
+          <button class="nav_item" id="nav_signin">登入/註冊</button>
+          <button class="nav_item" id="nav_register">登出系統</button>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <div class="thank_top">
+        <div class="thank_title">付款成功！</div>
+        <div class="thank_title">感謝您的訂購，祝您旅途愉快</div>
+      </div>
+      <div class="thank_info"></div>
+      <div class="thank_contact"></div>
+      <div class="thank_bottom">
+        <button class="btnBackIndex">回到首頁</button>
+      </div>
+    </main>
+    <footer>COPYRIGHT © 2022 台北一日遊</footer>
+    <div class="model model_signIn" id="model_signIn">
+      <div class="model_top"></div>
+      <button class="btn_close_model">
+        <img src="../static/css/picture/icon_close.png" />
+      </button>
+      <div class="model_title">登入會員帳號</div>
+      <form class="model_form signIn_form">
+        <input
+          type="email"
+          name="email"
+          id="logIn_email"
+          placeholder="輸入電子信箱"
+        />
+        <input
+          type="password"
+          name="password"
+          id="logIn_password"
+          placeholder="輸入密碼"
+        />
+        <button class="model_btn" id="signIn_button" type="button">
+          登入帳戶
+        </button>
+        <div class="signInMsg"></div>
+        <button class="model_bottom" id="turnToRegister">
+          還沒有帳戶？<a href="#" id="showRegisterForm">點此註冊</a>
+        </button>
+      </form>
+    </div>
+    <div class="model model_register" id="model_register">
+      <div class="model_top"></div>
+      <button class="btn_close_model">
+        <img src="../static/css/picture/icon_close.png" />
+      </button>
+      <div class="model_title">註冊會員帳號</div>
+      <form class="model_form register_form">
+        <input
+          type="text"
+          name="name"
+          id="register_name"
+          placeholder="輸入姓名"
+        />
+        <input
+          type="email"
+          name="email"
+          id="register_email"
+          placeholder="輸入電子信箱"
+        />
+        <input
+          type="password"
+          name="password"
+          id="register_password"
+          placeholder="輸入密碼"
+        />
+        <button class="model_btn" id="register_button" type="button">
+          註冊新帳戶
+        </button>
+        <div class="registerMsg"></div>
+        <div class="model_bottom" id="turnToSignIn">
+          已經有帳戶了？<a href="#" id="showLogInForm">點此登入</a>
+        </div>
+      </form>
+    </div>
+    <div class="overlay"></div>
+    <script src="../static/JS/user.js"></script>
+    <script src="../static/JS/order.js"></script>
+  </body>
+</html>

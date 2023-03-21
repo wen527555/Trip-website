@@ -1,6 +1,7 @@
 "use strict";
 
 const overlay = document.querySelector(".overlay");
+const btnBookingPage = document.getElementById("nav_booking");
 const btnCloseModel = document.querySelectorAll(".btn_close_model");
 const btnOpenSignInFrom = document.getElementById("nav_signin");
 const btnSignOut = document.getElementById("nav_register");
@@ -15,6 +16,14 @@ const logIn_password = document.getElementById("logIn_password");
 const register_email = document.getElementById("register_email");
 const register_password = document.getElementById("register_password");
 const register_name = document.getElementById("register_name");
+const token = getCookie("access_token");
+const nav_booking = btnBookingPage.addEventListener("click", () => {
+  if (!token) {
+    openSignInFrom();
+  } else {
+    window.location.href = `/booking`;
+  }
+});
 
 //model
 const turnToRegister = function () {
@@ -63,26 +72,92 @@ const registerBtn = document.getElementById("register_button");
 const registerMsg = document.querySelector(".registerMsg");
 let hasMsg = false;
 
-//會員註冊驗證
-function registerSystem() {
-  fetch(`/api/user`, {
-    method: "POST",
-    body: JSON.stringify({
-      name: register_name.value,
-      email: register_email.value,
-      password: register_password.value,
-    }),
+//定義取得cookie的函數;
+function getCookie(name) {
+  const cookies = document.cookie.split(";");
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i].trim();
+    if (cookie.startsWith(name + "=")) {
+      return cookie.substring(name.length + 1);
+    }
+  }
+  return null;
+}
+
+//會員狀態
+function getCurrentUser() {
+  if (!token) {
+    btnSignOut.style.display = "none";
+    btnOpenSignInFrom.style.display = "block";
+  }
+  fetch(`/api/user/auth`, {
+    method: "GET",
     headers: {
+      Authorization: "Bearer " + token,
       "Content-Type": "application/json",
     },
   })
     .then((response) => response.json())
     .then((data) => {
-      registerMsg.style.display = "block";
-      registerMsg.textContent = data["message"];
-      hasMsg = true;
+      if (data["data"] != null) {
+        btnSignOut.style.display = "block";
+        btnOpenSignInFrom.style.display = "none";
+      } else {
+        btnSignOut.style.display = "none";
+        btnOpenSignInFrom.style.display = "block";
+      }
     })
-    .catch((error) => console.log(error));
+    .catch((error) => {
+      // console.log(error);
+      console.log("API呼叫失敗:" + error.message);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", getCurrentUser);
+
+//會員註冊驗證
+function registerSystem() {
+  const emailRegex = /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/;
+  const nameRegex = /^[\u4E00-\u9FA5a-zA-Z]{2,10}$/;
+  const passwordPegex = /^(?=.*[A-Z]).{8,15}$/;
+  if (register_email.value !== "" && !emailRegex.test(register_email.value)) {
+    registerMsg.style.display = "block";
+    registerMsg.textContent = "信箱格式錯誤，請重新輸入";
+    hasMsg = true;
+  } else if (
+    register_name.value !== "" &&
+    !nameRegex.test(register_name.value)
+  ) {
+    registerMsg.style.display = "block";
+    registerMsg.textContent = "姓名格式須包含2~10個中文或英文字";
+    hasMsg = true;
+  } else if (
+    register_password.value !== "" &&
+    !passwordPegex.test(register_password.value)
+  ) {
+    registerMsg.style.display = "block";
+    registerMsg.textContent = "密碼格式至少為8個字且需含一個大寫英文字母";
+    hasMsg = true;
+  } else {
+    fetch(`/api/user`, {
+      method: "POST",
+      body: JSON.stringify({
+        name: register_name.value,
+        email: register_email.value,
+        password: register_password.value,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        registerMsg.style.display = "block";
+        registerMsg.textContent = data["message"];
+        hasMsg = true;
+      })
+      .catch((error) => console.log(error));
+  }
 }
 registerBtn.addEventListener("click", registerSystem);
 
@@ -139,52 +214,3 @@ const logOutUser = btnSignOut.addEventListener("click", () => {
     })
     .catch((error) => console.log(error));
 });
-
-//定義取得cookie的函數;
-function getCookie(name) {
-  const cookies = document.cookie.split(";");
-  for (let i = 0; i < cookies.length; i++) {
-    const cookie = cookies[i].trim();
-    if (cookie.startsWith(name + "=")) {
-      return cookie.substring(name.length + 1);
-    }
-  }
-  return null;
-}
-
-//會員狀態
-function getCurrentUser() {
-  const token = getCookie("access_token");
-  if (!token) {
-    btnSignOut.style.display = "none";
-    btnOpenSignInFrom.style.display = "block";
-  }
-  fetch(`/api/user/auth`, {
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + token,
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        console.log("API呼叫失敗:" + response.status);
-      }
-    })
-    .then((data) => {
-      if (data["data"] != null) {
-        btnSignOut.style.display = "block";
-        btnOpenSignInFrom.style.display = "none";
-      } else {
-        btnSignOut.style.display = "none";
-        btnOpenSignInFrom.style.display = "block";
-      }
-    })
-    .catch((error) => {
-      // console.log(error);
-      console.log("API呼叫失敗:" + error.message);
-    });
-}
-getCurrentUser();

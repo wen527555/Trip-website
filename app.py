@@ -11,7 +11,12 @@ from flask import jsonify
 import math
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
-
+# import requests
+import time
+import random
+import string
+import requests
+from datetime import datetime
 
 
 connection_pooling=pooling.MySQLConnectionPool(
@@ -164,7 +169,6 @@ def register():
     try:
         #檢查使用者名稱是否存在
         data=request.json
-        print(data)
         name=data["name"]
         password=data["password"]
         email=data["email"]
@@ -179,10 +183,10 @@ def register():
                 mycursor.execute("INSERT INTO user (name,email,password) VALUES( %s, %s, %s)",[name,email,hashed_password])
                 connection_object.commit()
                 user=mycursor.fetchone()
-                response= jsonify({"OK":True,"data":user,"message":"註冊成功！"}) 
+                response= jsonify({"OK":True,"data":user,"message":"註冊成功！"}),200 
                 return response
             else:
-                return{"error":True,"message":"此email已註冊過，請登入"},401
+                return{"error":True,"message":"此email已註冊過，請登入"},400
 
             
 
@@ -203,10 +207,10 @@ def auth_get():
             if email:
                 mycursor.execute("SELECT id,name,email FROM user WHERE email=%s",[email])
                 user=mycursor.fetchone()
-                response= jsonify({"data":user}) 
+                response= jsonify({"data":user})
                 return response
             else:
-                return jsonify({"error":True,"message":"尚未登入"}),422  
+                return jsonify({"error":True,"message":"尚未登入"}),403
 
     except Exception as e:
             return {"error": True, "message": str(e)},500
@@ -224,7 +228,6 @@ def auth():
             # 會員登入
             if request.method=='PUT':
                 data=request.get_json()
-                print(data)
                 password=data["password"]
                 email=data["email"]
                 if not email or not password:
@@ -236,13 +239,11 @@ def auth():
                 elif not check_password_hash(results["password"],password):
                     return {"error":True,"message":"密碼錯誤"}
                 elif results:
-
                     access_token=create_access_token(identity=email)
                     response=make_response({"ok":True})
-                    print(response)
-                    response.set_cookie("access_token", access_token, secure=False, domain='172.20.10.12',path='/')
+                    response.set_cookie("access_token", access_token, secure=False)
                     return response
-
+                    
 
             # 會員登出
             elif request.method=='DELETE':
@@ -280,18 +281,17 @@ def booking_get():
                     date=booking_data["date"].strftime('%Y-%-m-%-d')
                     price=int(booking_data["price"])
                     booking_info={
-                        "id":booking_data["id"],
                         "username":result["name"],
                         "date":date,
                         "time":booking_data["time"],
                         "price":price,
                         "attraction":{
+                        "id":booking_data["id"],    
                         "name":booking_data["name"],
                         "address":booking_data["address"],
                         "image":new_images,
                         }                        
                     }
-                    # print(booking_info)
                     return jsonify({"data":booking_info}),200      
                 else:
                     return jsonify({"data":None,"message":"沒有預定的行程"})           
@@ -301,10 +301,10 @@ def booking_get():
                 "error":True,
                 "message":"未登入，拒絕存取"
             } 
-                return jsonify(response),401
+                return jsonify(response),403
 
     except Exception as e:
-        return {"error": True, "message": str(e)}
+        return {"error": True, "message": str(e)},500
 
     finally:
         mycursor.close()
@@ -321,7 +321,6 @@ def booking_post():
         time=data["time"]
         price=data["price"]
         attractionId=data["attractionId"]
-        print(attractionId,date,time,price, user_email)
         if not date or not time or not price or not attractionId :
             return jsonify({"error":True,"message":"所有欄位皆須填寫，請勿空白"}),400
         connection_object=connection_pooling.get_connection()
@@ -345,15 +344,14 @@ def booking_post():
                     "time":time,
                     "price":price,
                 }
-                print(data)
-                return jsonify({"data":data})
+                return jsonify({"data":data}),200
 
             else:
                 response={
                 "error":True,
                 "message":"未登入，拒絕存取"
             } 
-                return jsonify(response),401
+                return jsonify(response),403
 
     except Exception as e:
         return {"error": True, "message": str(e)},500
@@ -389,7 +387,7 @@ def booking_delete():
                 "error":True,
                 "message":"未登入，拒絕存取"
             } 
-                return jsonify(response),401
+                return jsonify(response),403
 
     except Exception as e:
         return jsonify({"error": True, "message": str(e)}),500
@@ -397,6 +395,135 @@ def booking_delete():
     finally:
         connection_object.close()
 
+#建立新的付款訂單
+@app.route('/api/orders',methods=['POST'])
+@jwt_required()
+def order_post():
+    try:
+        order_data=request.json
+        print(order_data)
+        prime=order_data["prime"]
+        orders=order_data["orders"]
+        trip=orders["trip"][0]
+        totalPrice=trip["price"]     
+        attraction=trip["attraction"]
+        contact=orders["contact"]
+        contactName=contact["name"]
+        contactEmail=contact["email"]
+        contactPhone=contact["phone"]
+        user_email=get_jwt_identity()
+        if not user_email:
+            return jsonify({"error":True,"message":"未登入，拒絕存取"}),403
+        # 進行 TapPay 付款程序
+        connection_object=connection_pooling.get_connection()
+        with connection_object.cursor(dictionary=True) as mycursor:
+            orderNumber=time.strftime("%Y%m%d%H%M%S")+''.join(random.choices(string.ascii_letters + string.digits, k=6))
+            mycursor.execute("INSERT INTO orders (order_number, prime, attraction_id, attraction_name, attraction_address, attraction_images, date, time, price, contact_name, contact_email, contact_phone, payment_status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (orderNumber,prime ,attraction["id"], attraction["name"], attraction["address"], attraction["image"], trip["date"], trip["time"], totalPrice, contactName, contactEmail, contactPhone, '未付款'))
+            connection_object.commit()
+            response = requests.post('https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime',
+                                headers={
+                                    'Content-Type': 'application/json',
+                                    'x-api-key': 'partner_HLMcv6auy331Uwg7BMCJHWDEtIL0OT4DsGPKrV7Ea0hB9HcYJHHke8mI'
+                                },
+                                json={
+                                    'partner_key': 'partner_HLMcv6auy331Uwg7BMCJHWDEtIL0OT4DsGPKrV7Ea0hB9HcYJHHke8mI',
+                                    "merchant_id": "wen527555_ESUN",
+                                    'prime': prime,
+                                    'amount': totalPrice,
+                                    'currency': 'TWD',
+                                    'details': 'Trip Order',
+                                    'cardholder': {
+                                        'phone_number':contactPhone,
+                                        'name': contactName,
+                                        'email': contactEmail
+                                    }
+                                })
+            # 付款成功
+            if  response.status_code == 200 and response.json()['status'] == 0:
+                mycursor.execute("UPDATE orders SET payment_status='已付款' WHERE order_number=%s ",(orderNumber,))
+                connection_object.commit()
+                mycursor.execute("SELECT id FROM user WHERE email=%s",[user_email])
+                result=mycursor.fetchone()       
+                user_id=result["id"]
+                mycursor.execute("DELETE FROM booking WHERE user_id=%s",[user_id])
+                connection_object.commit()
+            # 回傳訂單編號和付款狀態
+                return jsonify({
+                    'data': {
+                        'number': orderNumber,
+                        'payment': {
+                            'status': 0,
+                            'message': '付款成功'
+                        }
+                    }
+                }),200
+            # 付款失敗
+            else:
+                return jsonify({
+                    'error':True,
+                    'data': {
+                        'number': orderNumber,
+                        'payment': {
+                            'status': -1,
+                            'message': '付款失敗，請檢查付款資訊是否正確'
+                        }
+                    }
+                }),400
+
+
+
+    except Exception as e:
+        return jsonify({"error": True, "message": str(e)}),500
+
+    finally:
+        connection_object.close()
+
+
+#根據訂單編號取得訂單資訊
+@app.route('/api/order/<orderNumber>',methods=['GET'])
+@jwt_required()
+def order_get(orderNumber):
+    try:
+        print(orderNumber)
+        user_email=get_jwt_identity()
+        if not user_email:
+            return jsonify({"error":True,"message":"未登入，拒絕存取"}),403
+        connection_object=connection_pooling.get_connection()
+        with connection_object.cursor(dictionary=True) as mycursor:
+            mycursor.execute("SELECT * FROM orders WHERE order_number=%s ",(orderNumber,))
+            order_data=mycursor.fetchone()
+            if order_data:       
+                contact={
+                    "name":order_data["contact_name"],
+                    "email":order_data["contact_email"],
+                    "phone":order_data["contact_phone"],
+                }
+                attraction={
+                    "id":order_data["attraction_id"],
+                    "name":order_data["attraction_name"],
+                    "address":order_data["attraction_address"],
+                    "image":order_data["attraction_images"],
+                }
+                order_info={
+                    "number":orderNumber,
+                    "price":order_data["price"],
+                    "trip":{
+                        "attraction":attraction,
+                        "date":order_data["date"],
+                        "time":order_data["time"],
+                    },
+                    "contact":contact
+                    ,
+                    "status":1                     
+                }
+                print(order_info)
+                return jsonify({"data":order_info}),200
+
+    except Exception as e:
+        return jsonify({"error": True, "message": str(e)}),500
+
+    finally:
+        connection_object.close()
 
 app.run(host='0.0.0.0',port=3000,debug=True)
 

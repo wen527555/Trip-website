@@ -1,16 +1,5 @@
 "use strict";
-
-// import { openSignInFrom } from "./user.js";
-const btnBookingPage = document.getElementById("nav_booking");
-
-const order_name = document.querySelector(".order_name");
-const order_date = document.querySelector(".order_date");
-const order_time = document.querySelector(".order_time");
-const order_price = document.querySelector(".order_price");
-const order_address = document.querySelector(".order_address");
-const order_image = document.querySelector(".order_image");
-const order_username = document.querySelector(".order_username");
-const token = getCookie("access_token");
+const order_info = document.querySelectorAll(".order_info");
 
 function getBooking() {
   if (!token) {
@@ -38,11 +27,39 @@ function getBooking() {
       });
   }
 }
+// let ordersdata = [];
+let trip = [];
+const totalPrice = document.querySelector(".order_totalPrice");
 
+const orderData = function () {
+  const order_name = document.querySelector(".order_name").textContent.slice(6);
+  const order_date = document.querySelector(".order_date").textContent;
+  const order_time = document.querySelector(".order_time").textContent;
+  const order_address = document.querySelector(".order_address").textContent;
+  const imageElement = document.querySelector(".order_image");
+  const imageUrl = imageElement.style.backgroundImage
+    .slice(4, -1)
+    .replace(/"/g, "");
+  const attraction_id = imageElement.getAttribute("attraction_id");
+  const total_price = totalPrice.textContent.slice(6, -1);
+
+  let data = {
+    attraction: {
+      id: attraction_id,
+      name: order_name,
+      address: order_address,
+      image: imageUrl,
+    },
+    date: order_date,
+    time: order_time,
+    price: total_price,
+  };
+
+  trip.push(data);
+};
+// console.log(trip);
 function renderBooking(bookingData) {
-  console.log(bookingData);
   const data = bookingData.data;
-  console.log(data);
   const main = document.getElementById("main_booking");
   if (data !== null) {
     const attraction = bookingData.data.attraction;
@@ -53,28 +70,31 @@ function renderBooking(bookingData) {
     const address = attraction.address;
     const image = attraction.image[0];
     const username = data.username;
+    const attraction_id = attraction.id;
+    order_info.forEach((e) => {
+      e.classList.remove("hidden");
+    });
     const renderBooking = `
-
-          <div class="order_Section order_Section1">
+          <div class="order_Section" id="order_Section1">
           <div class="order_username">您好，${username}，待預定的行程如下：</div>
-          <div class="order_image" style="background-image: url('${image}')"></div>
+          <div class="order_image" style="background-image: url('${image}')" attraction_id="${attraction_id}" ></div>
           <div class="order_Section1_middle">
-            <div class="order_name">台北一日遊：${name}</div>
+            <div class="order_name" ">台北一日遊：${name}</div>
             <div class="order_title2">
               日期：
-              <div class="order_text order_date" id="order_date">${date}</div>
+              <div class="order_text order_date" id="order_date" ">${date}</div>
             </div>
             <div class="order_title2">
               時間：
-              <div class="order_text order_time" id="order_time">${time}</div>
+              <div class="order_text order_time" id="order_time" ">${time}</div>
             </div>
             <div class="order_title2">
               費用：
-              <div class="order_text order_price" id="order_price">新台幣${price}元</div>
+              <div class="order_text order_price" id="order_price" ">新台幣${price}元</div>
             </div>
             <div class="order_title2">
               地點：
-              <div class="order_text order_address" id="order_address">${address}</div>
+              <div class="order_text order_address" id="order_address" ">${address}</div>
             </div>
           </div>
           <div class="order_deletebtn">
@@ -84,134 +104,23 @@ function renderBooking(bookingData) {
             />
           </div>
         </div>
-        <div class="order_Section order_Section2">
-          <hr />
-          <div class="order_title">您的聯絡資訊</div>
-          <form class="contact_form">
-            <div class="input_box">
-              <label class="order_text" for="contact_name">聯絡姓名：</label>
-              <input type="text" id="contact_name" />
-            </div>
-            <div class="input_box">
-              <label class="order_text" for="contact_email">聯絡信箱：</label>
-              <input type="email" id="contact_email" />
-            </div>
-            <div class="input_box">
-              <label class="order_text" for="contact_phone">手機號碼：</label>
-              <input type="text" id="contact_phone" />
-            </div>
-          </form>
-          <div class="order_text2">
-            請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。
-          </div>
-        </div>
-        <div class="order_Section order_Section3">
-          <hr />
-          <div class="order_title">信用卡付款資訊</div>
-          <form class="creditCard_number">
-            <div class="input_box">
-              <label class="order_text" for="creditCard_number">卡片號碼：</label>
-              <input type="text" id="creditCard_number" />
-            </div>
-            <div class="input_box">
-              <label class="order_text" for="creditCard_date">過期時間：</label>
-              <input type="email" id="creditCard_date" />
-            </div>
-            <div class="input_box">
-              <label class="order_text" for="creditCard_password"
-                >驗證密碼：</label
-              >
-              <input type="text" id="creditCard_password" />
-            </div>
-          </form>
-        </div>
-
-        <div class="order_Section order_Section4">
-          <hr />
-          <div class="order_Section4_right">
-            <div class="order_totalPrice" id="order_totalPrice"></div>
-            <button class="payment_btn">確認訂購並付款</button>
-          </div>
-        </div>`;
+`;
+    if (price === 2000) {
+      totalPrice.innerText = "總價：新台幣2000元";
+    } else {
+      totalPrice.innerText = "總價：新台幣2500元";
+    }
     main.insertAdjacentHTML("beforeend", renderBooking);
-
-    // const booking = ``;
-    // main.insertAdjacentHTML("beforeend", booking);
-    // order_name.textContent = "台北一日遊：" + name;
-    // order_date.textContent = date;
-    // order_time.textContent = time;
-    // order_price.textContent = "新台幣" + price + "元";
-    // order_address.textContent = address;
-    // order_image.style.backgroundImage = `url(${image})`;
+    orderData();
   } else {
-    const noBooking = `<div class="noBooking">目前沒有任何待預約的行程</div>`;
+    const noBooking = `   
+    <div class="order_Section order_Section1"> 
+    <div class="noBooking">目前沒有任何待預約的行程</div>
+    </div>`;
     main.insertAdjacentHTML("beforeend", noBooking);
   }
 }
-
 document.addEventListener("DOMContentLoaded", getBooking);
-
-const nav_booking = btnBookingPage.addEventListener("click", () => {
-  if (!token) {
-    openSignInFrom();
-  } else {
-    window.location.href = `/booking`;
-  }
-});
-
-//建立旅遊行程
-function CreateBooking() {
-  const bookingDate = document.getElementById("booking_date");
-  const attraction_Id = window.location.pathname.split("/")[2];
-  let bookingPrice = null;
-  let bookingTime = null;
-  if (morning.checked) {
-    bookingTime = "早上9點至中午12點";
-    bookingPrice = 2000;
-  } else {
-    bookingTime = "下午2點至下午4點";
-    bookingPrice = 2500;
-  }
-
-  if (!token) {
-    openSignInFrom();
-  } else if (
-    bookingDate.value === "" ||
-    bookingTime === null ||
-    bookingPrice === null
-  ) {
-    console.log("所有欄位皆須填寫，請勿空白");
-  } else {
-    fetch(`/api/booking`, {
-      method: "POST",
-      body: JSON.stringify({
-        attractionId: attraction_Id,
-        date: bookingDate.value,
-        time: bookingTime,
-        price: bookingPrice,
-      }),
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        if (data !== null) {
-          window.location.href = `/booking`;
-        } else {
-          console.log("建立行程失敗");
-        }
-      })
-      .catch((error) => {
-        // console.log(error);
-        console.log("API呼叫失敗:" + error.message);
-      });
-  }
-}
-const btnCreateBooking = document.querySelector(".booking_btn");
-btnCreateBooking.addEventListener("click", CreateBooking);
 
 //刪除旅遊行程
 function deleteBooking() {
@@ -233,8 +142,238 @@ function deleteBooking() {
         }
       })
       .then((data) => {
-        location.reload();
-        console.log("已成功刪除行程");
+        if (data) {
+          location.reload();
+          console.log("已成功刪除行程");
+        }
       });
   }
+}
+
+TPDirect.setupSDK(
+  128060,
+  "app_FumkJDgsJknsS3H1zvKb88gRyGE2jYgyrfdxdREjWh0b59yij2ff6rSj3J2r",
+  "sandbox"
+);
+
+TPDirect.card.setup({
+  fields: {
+    number: {
+      // css selector
+      element: document.getElementById("card-number"),
+      placeholder: "**** **** **** ****",
+    },
+    expirationDate: {
+      // DOM object
+      element: document.getElementById("card-expiration-date"),
+      placeholder: "MM / YY",
+    },
+    ccv: {
+      element: document.getElementById("card-ccv"),
+      placeholder: "ccv",
+    },
+  },
+  styles: {
+    // Style all elements
+    input: {
+      color: "gray",
+    },
+    // Styling ccv field
+    "input.ccv": {
+      "font-size": "16px",
+    },
+    // Styling expiration-date field
+    "input.expiration-date": {
+      "font-size": "16px",
+    },
+    // Styling card-number field
+    "input.card-number": {
+      "font-size": "16px",
+    },
+    // style focus state
+    ":focus": {
+      color: "black",
+    },
+    // style valid state
+    ".valid": {
+      color: "#448899",
+    },
+    // style invalid state
+    ".invalid": {
+      color: "red",
+    },
+    // Media queries
+    // Note that these apply to the iframe, not the root window.
+    "@media screen and (max-width: 400px)": {
+      input: {
+        color: "#448899",
+      },
+    },
+  },
+  // 此設定會顯示卡號輸入正確後，會顯示前六後四碼信用卡卡號
+  isMaskCreditCardNumber: true,
+  maskCreditCardNumberRange: {
+    beginIndex: 6,
+    endIndex: 11,
+  },
+});
+
+//檢查聯絡資訊輸入格式
+const btnPayment = document.querySelector(".payment_btn");
+const contactEmail = document.querySelector("#contact_email");
+const contactPhone = document.querySelector("#contact_phone");
+const contactName = document.querySelector("#contact_name");
+const phoneRegex = /^09\d{8}$/;
+const emailRegex = /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/;
+const nameRegex = /^[\u4E00-\u9FA5a-zA-Z]{2,10}$/;
+
+const checkContactStatus = (input, regex) => {
+  const image = input.nextElementSibling;
+  image.src = regex.test(input.value)
+    ? "../static/css/picture/check.png"
+    : "../static/css/picture/cancel.png";
+};
+
+contactPhone.addEventListener("input", () =>
+  checkContactStatus(contactPhone, phoneRegex)
+);
+contactEmail.addEventListener("input", () =>
+  checkContactStatus(contactEmail, emailRegex)
+);
+
+contactName.addEventListener("input", () =>
+  checkContactStatus(contactName, nameRegex)
+);
+
+// listen for TapPay Field
+TPDirect.card.onUpdate(function (update) {
+  /* Disable / enable submit button depend on update.canGetPrime  */
+
+  if (update.canGetPrime) {
+    btnPayment.removeAttribute("disabled");
+    btnPayment.addEventListener("click", onSubmit);
+    btnPayment.style.opacity = "100%";
+  } else {
+    btnPayment.removeEventListener("click", onSubmit);
+    btnPayment.style.opacity = "30%";
+    btnPayment.setAttribute("disabled", true);
+  }
+
+  // 檢查信用卡資訊輸入格式
+
+  if (update.status.number === 2) {
+    checkInputStatus("#card-number", "hasError");
+  } else if (update.status.number === 0) {
+    checkInputStatus("#card-number", "hasSuccess");
+  } else {
+    checkInputStatus("#card-number", "");
+  }
+
+  if (update.status.expiry === 2) {
+    checkInputStatus("#card-expiration-date", "hasError");
+  } else if (update.status.expiry === 0) {
+    checkInputStatus("#card-expiration-date", "hasSuccess");
+  } else {
+    checkInputStatus("#card-expiration-date", "");
+  }
+
+  if (update.status.ccv === 2) {
+    checkInputStatus("#card-ccv", "hasError");
+  } else if (update.status.ccv === 0) {
+    checkInputStatus("#card-ccv", "hasSuccess");
+  } else {
+    checkInputStatus("#card-ccv", "");
+  }
+});
+
+function checkInputStatus(selector, status) {
+  const element = document.querySelector(selector);
+  const image = element.nextElementSibling;
+
+  if (status === "hasError") {
+    image.src = "../static/css/picture/cancel.png";
+  } else if (status === "hasSuccess") {
+    image.src = "../static/css/picture/check.png";
+  } else if (status) {
+    image.src = "";
+  }
+}
+
+function onSubmit(event) {
+  event.preventDefault();
+
+  const tappayStatus = TPDirect.card.getTappayFieldsStatus();
+
+  // Check TPDirect.card.getTappayFieldsStatus().canGetPrime before TPDirect.card.getPrime
+  if (tappayStatus.canGetPrime === false) {
+    console.log("can not get prime");
+    return;
+  }
+
+  // Get prime
+  TPDirect.card.getPrime(function (result) {
+    console.log(result);
+    if (result.status !== 0) {
+      console.log("get prime error: " + result.msg);
+      return;
+    }
+    console.log("get prime 成功，prime: " + result.card.prime);
+
+    let orders = {
+      prime: result.card.prime,
+      orders: {
+        trip: trip,
+        contact: {
+          name: contactName.value,
+          phone: contactPhone.value,
+          email: contactEmail.value,
+        },
+      },
+    };
+    console.log(orders);
+    createOrder(orders);
+  });
+}
+
+const notifyBox = document.querySelector(".notify_box");
+const btnCloseNotify = document.querySelector(".btn_close_notify");
+const notifyMsg = document.querySelector(".notify_message");
+
+//付款狀態通知
+const closeNotify = function () {
+  notifyBox.classList.remove("show");
+};
+btnCloseNotify.addEventListener("click", closeNotify);
+
+//建立新的付款訂單
+function createOrder(orders) {
+  fetch(`/api/orders`, {
+    method: "POST",
+    body: JSON.stringify(orders),
+    headers: {
+      Authorization: "Bearer " + token,
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((result) => {
+      console.log(result.data);
+      const orderData = result.data;
+      const orderNumber = orderData.number;
+      console.log(orderData.payment.status);
+      if (orderData.payment.status === 0) {
+        window.location.href = `/thankyou?number=${orderNumber}`;
+        // notifyBox.classList.add("show");
+        // overlay.classList.add("show");
+        // notifyMsg.innerText = "訂單編號：" + orderNumber + "\n 付款成功！";
+      } else {
+        notifyBox.classList.add("show");
+        notifyMsg.innerText =
+          "訂單編號：" + orderNumber + "\n 付款失敗，\n 請檢查付款資訊是否正確";
+      }
+    })
+    .catch((error) => {
+      // console.log(error);
+      console.log("API呼叫失敗:" + error.message);
+    });
 }
