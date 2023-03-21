@@ -5,11 +5,68 @@ const footer = document.querySelector("footer");
 const searchInput = document.getElementById("searchInput");
 const searchBtn = document.getElementById("search_btn");
 const categoryList = document.getElementById("category_list");
-const index_card = document.querySelector(".index_card");
+// const index_card = document.querySelector(".index_card");
 
 let nextPage, keyword, attractionId;
 //初始化loading狀態為false，表示沒有正在載入中的資料
 let isLoading = false;
+
+function appendCards(result) {
+  let attractions = result.data;
+  if (attractions == "") {
+    mainContainer.innerHTML = "無搜尋結果";
+  }
+  attractions.forEach((attraction) => {
+    let name = attraction.name;
+    let mrt = attraction.mrt;
+    let cat = attraction.category;
+    let images = attraction.images[0];
+    let id = attraction.id;
+
+    let cards = `<div class="index_card" data-ID="${id}">
+   <div class="index_img" style="background-image: url('${images}')"></div>
+   <div class="index_name">${name}</div>
+   <div class="index_inf">
+     <div class="index_mrt">${mrt}</div>
+     <div class="index_cat">${cat}</div>
+   </div>
+ </div> `;
+    mainContainer.insertAdjacentHTML("beforeend", cards);
+  });
+  nextPage = result.nextPage;
+  isLoading = false;
+}
+
+//獲取景點資訊
+
+function getAttractions(page) {
+  let url = `/api/attractions?page=${page}`;
+
+  if (keyword) {
+    url += `&keyword=${keyword}`;
+  }
+  isLoading = true;
+  fetch(url)
+    .then((response) => response.json())
+    .then((result) => {
+      appendCards(result);
+      nextPage = result.nextPage;
+    })
+    .catch((error) => console.error("Error", error))
+    .finally(() => {
+      isLoading = false;
+    });
+}
+
+getAttractions(0);
+
+const getAttractionCard = document.addEventListener("click", (event) => {
+  const card = event.target.closest(".index_card");
+  if (!card) return;
+
+  const id = card.dataset.id;
+  window.location.href = `/attraction/${id}`;
+});
 
 //網頁加載後立即獲取 categoryList
 const getCategories = () => {
@@ -47,63 +104,6 @@ document.addEventListener("click", (event) => {
   ) {
     categoryList.style.display = "none";
   }
-});
-
-//獲取景點資訊
-
-function getAttractions(page) {
-  let url = `/api/attractions?page=${page}`;
-
-  if (keyword) {
-    url += `&keyword=${keyword}`;
-  }
-  isLoading = true;
-  fetch(url)
-    .then((response) => response.json())
-    .then((result) => {
-      appendCards(result);
-      nextPage = result.nextPage;
-    })
-    .catch((error) => console.error("Error", error))
-    .finally(() => {
-      isLoading = false;
-    });
-}
-
-getAttractions("0");
-
-function appendCards(result) {
-  let attractions = result.data;
-  if (attractions == "") {
-    mainContainer.innerHTML = "無搜尋結果";
-  }
-  attractions.forEach((attraction) => {
-    let name = attraction.name;
-    let mrt = attraction.mrt;
-    let cat = attraction.category;
-    let images = attraction.images[0];
-    let id = attraction.id;
-
-    let cards = `<div class="index_card" data-ID="${id}">
-   <div class="index_img" style="background-image: url('${images}')"></div>
-   <div class="index_name">${name}</div>
-   <div class="index_inf">
-     <div class="index_mrt">${mrt}</div>
-     <div class="index_cat">${cat}</div>
-   </div>
- </div> `;
-    mainContainer.insertAdjacentHTML("beforeend", cards);
-  });
-  nextPage = result.nextPage;
-  isLoading = false;
-}
-
-const getAttractionCard = document.addEventListener("click", (event) => {
-  const card = event.target.closest(".index_card");
-  if (!card) return;
-
-  const id = card.dataset.id;
-  window.location.href = `/attraction/${id}`;
 });
 
 searchBtn.addEventListener("click", () => {

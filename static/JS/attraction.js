@@ -124,3 +124,56 @@ function updatePrice() {
     price.innerText = "新台幣2500元";
   }
 }
+
+//建立旅遊行程
+function CreateBooking() {
+  const bookingDate = document.getElementById("booking_date");
+  let bookingPrice = null;
+  let bookingTime = null;
+  if (morning.checked) {
+    bookingTime = "早上9點至中午12點";
+    bookingPrice = 2000;
+  } else {
+    bookingTime = "下午2點至下午4點";
+    bookingPrice = 2500;
+  }
+
+  if (!token) {
+    openSignInFrom();
+  } else if (
+    bookingDate.value === "" ||
+    bookingTime === null ||
+    bookingPrice === null
+  ) {
+    console.log("所有欄位皆須填寫，請勿空白");
+  } else {
+    fetch(`/api/booking`, {
+      method: "POST",
+      body: JSON.stringify({
+        attractionId: attractionId,
+        date: bookingDate.value,
+        time: bookingTime,
+        price: bookingPrice,
+      }),
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data !== null) {
+          window.location.href = `/booking`;
+        } else {
+          console.log("建立行程失敗");
+        }
+      })
+      .catch((error) => {
+        // console.log(error);
+        console.log("API呼叫失敗:" + error.message);
+      });
+  }
+}
+const btnCreateBooking = document.querySelector(".booking_btn");
+btnCreateBooking.addEventListener("click", CreateBooking);
