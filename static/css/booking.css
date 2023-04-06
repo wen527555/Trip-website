@@ -13,7 +13,7 @@ nav {
   grid-template-columns: auto minmax(300px, 1200px) auto;
   position: sticky;
   background-color: #ffffff;
-  z-index: 10;
+  z-index: 200;
   top: 0;
   height: 54px;
 }
@@ -48,6 +48,10 @@ nav > .nav_box > .nav_items > .nav_item {
   background-color: #ffffff;
   padding-right: 10px;
   cursor: pointer;
+}
+
+nav > .nav_box > .nav_items > .nav_item:hover {
+  color: #448899;
 }
 
 main {

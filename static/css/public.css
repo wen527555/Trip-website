@@ -97,6 +97,7 @@ button:hover {
   text-align: center;
   color: #ffffff;
   border: none;
+  cursor: pointer;
 }
 
 .model > .model_form > .model_bottom {
@@ -114,10 +115,6 @@ button:hover {
   color: #666666;
   text-decoration: none;
 }
-
-/* .model > .model_form > .model_bottom > a:hover {
-    text-decoration: none;
-  } */
 
 .overlay {
   position: fixed;

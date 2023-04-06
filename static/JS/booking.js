@@ -1,30 +1,27 @@
 "use strict";
 const order_info = document.querySelectorAll(".order_info");
 
-function getBooking() {
+async function getBooking() {
   if (!token) {
     openSignInFrom();
   } else {
-    fetch(`/api/booking`, {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("API呼叫失敗:" + response.status);
-        }
-      })
-      .then((bookingData) => {
-        renderBooking(bookingData);
-      })
-      .catch((error) => {
-        console.log("API呼叫失敗:" + error.message);
+    try {
+      const response = await fetch(`/api/booking`, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
       });
+      if (response.ok) {
+        const bookingData = await response.json();
+        renderBooking(bookingData);
+      } else {
+        console.log("API呼叫失敗:" + response.status);
+      }
+    } catch (error) {
+      console.log("API呼叫失敗:" + error.message);
+    }
   }
 }
 // let ordersdata = [];
@@ -123,30 +120,30 @@ function renderBooking(bookingData) {
 document.addEventListener("DOMContentLoaded", getBooking);
 
 //刪除旅遊行程
-function deleteBooking() {
+async function deleteBooking() {
   if (!token) {
     openSignInFrom();
   } else {
-    fetch(`/api/booking`, {
-      method: "DELETE",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.log("API呼叫失敗:" + response.status);
-        }
-      })
-      .then((data) => {
+    try {
+      const response = await fetch(`/api/booking`, {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
         if (data) {
           location.reload();
           console.log("已成功刪除行程");
         }
-      });
+      } else {
+        console.log("API呼叫失敗:" + response.status);
+      }
+    } catch (error) {
+      console.log("API呼叫失敗:" + error.message);
+    }
   }
 }
 
@@ -234,20 +231,29 @@ const checkContactStatus = (input, regex) => {
     : "../static/css/picture/cancel.png";
 };
 
-contactPhone.addEventListener("input", () =>
+const phoneInfo = contactPhone.addEventListener("input", () =>
   checkContactStatus(contactPhone, phoneRegex)
 );
-contactEmail.addEventListener("input", () =>
+const emailInfo = contactEmail.addEventListener("input", () =>
   checkContactStatus(contactEmail, emailRegex)
 );
 
-contactName.addEventListener("input", () =>
+const nameInfo = contactName.addEventListener("input", () =>
   checkContactStatus(contactName, nameRegex)
 );
 
 // listen for TapPay Field
 TPDirect.card.onUpdate(function (update) {
   /* Disable / enable submit button depend on update.canGetPrime  */
+
+  if (
+    contactPhone.value === "" ||
+    contactEmail.value === "" ||
+    contactName.value === ""
+  ) {
+    notifyBox.classList.add("show");
+    notifyMsg.innerText = "請確認聯絡資訊填寫格式是否正確";
+  }
 
   if (update.canGetPrime) {
     btnPayment.removeAttribute("disabled");
@@ -335,45 +341,34 @@ function onSubmit(event) {
   });
 }
 
-const notifyBox = document.querySelector(".notify_box");
-const btnCloseNotify = document.querySelector(".btn_close_notify");
-const notifyMsg = document.querySelector(".notify_message");
-
-//付款狀態通知
-const closeNotify = function () {
-  notifyBox.classList.remove("show");
-};
-btnCloseNotify.addEventListener("click", closeNotify);
-
 //建立新的付款訂單
-function createOrder(orders) {
-  fetch(`/api/orders`, {
-    method: "POST",
-    body: JSON.stringify(orders),
-    headers: {
-      Authorization: "Bearer " + token,
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => response.json())
-    .then((result) => {
-      console.log(result.data);
-      const orderData = result.data;
-      const orderNumber = orderData.number;
-      console.log(orderData.payment.status);
-      if (orderData.payment.status === 0) {
-        window.location.href = `/thankyou?number=${orderNumber}`;
-        // notifyBox.classList.add("show");
-        // overlay.classList.add("show");
-        // notifyMsg.innerText = "訂單編號：" + orderNumber + "\n 付款成功！";
-      } else {
-        notifyBox.classList.add("show");
-        notifyMsg.innerText =
-          "訂單編號：" + orderNumber + "\n 付款失敗，\n 請檢查付款資訊是否正確";
-      }
-    })
-    .catch((error) => {
-      // console.log(error);
-      console.log("API呼叫失敗:" + error.message);
+async function createOrder(orders) {
+  try {
+    const response = await fetch(`/api/orders`, {
+      method: "POST",
+      body: JSON.stringify(orders),
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
     });
+    const result = await response.json();
+    console.log(result.data);
+    const orderData = result.data;
+    const orderNumber = orderData.number;
+    console.log(orderData.payment.status);
+    if (orderData.payment.status === 0) {
+      window.location.href = `/thankyou?number=${orderNumber}`;
+      // notifyBox.classList.add("show");
+      // overlay.classList.add("show");
+      // notifyMsg.innerText = "訂單編號：" + orderNumber + "\n 付款成功！";
+    } else {
+      notifyBox.classList.add("show");
+      notifyMsg.innerText =
+        "訂單編號：" + orderNumber + "\n 付款失敗，\n 請檢查付款資訊是否正確";
+    }
+  } catch (error) {
+    // console.log(error);
+    console.log("API呼叫失敗:" + error.message);
+  }
 }
