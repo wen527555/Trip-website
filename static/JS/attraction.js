@@ -8,6 +8,7 @@ const attrs_address = document.querySelector(".attrs_address");
 const attrs_transport = document.querySelector(".attrs_transport");
 const attractionId = window.location.pathname.split("/")[2];
 const morning = document.getElementById("booking_time_morning");
+const afternoon = document.getElementById("booking_time_afternoon");
 const price = document.getElementById("price");
 const btnLeft = document.querySelector(".slide_btn_left");
 const btnRight = document.querySelector(".slide_btn_right");
@@ -87,33 +88,34 @@ const slider = function () {
   });
 };
 
-const getAttractionsId = () => {
-  fetch(`/api/attraction/${attractionId}`)
-    .then((respose) => respose.json())
-    .then((result) => {
-      let attraction = result.data;
-      const name = attraction.name;
-      const mrt = attraction.mrt;
-      const cat = attraction.category;
-      const description = attraction.description;
-      const address = attraction.address;
-      const transport = attraction.transport;
-      const images = attraction.images;
-      images.forEach((image, i) => {
-        let div = document.createElement("div");
-        div.classList.add("slide");
-        div.style.backgroundImage = `url(${image})`;
-        div.style.transform = `translateX(${100 * i}%)`;
-        attrs_img.appendChild(div);
-      });
-      attrs_name.textContent = name;
-      attrs_inf.textContent = cat + " at " + mrt;
-      attrs_description.textContent = description;
-      attrs_address.textContent = address;
-      attrs_transport.textContent = transport;
-      slider();
-    })
-    .catch((error) => console.error("Error", error));
+const getAttractionsId = async () => {
+  try {
+    const response = await fetch(`/api/attraction/${attractionId}`);
+    const result = await response.json();
+    let attraction = result.data;
+    const name = attraction.name;
+    const mrt = attraction.mrt;
+    const cat = attraction.category;
+    const description = attraction.description;
+    const address = attraction.address;
+    const transport = attraction.transport;
+    const images = attraction.images;
+    images.forEach((image, i) => {
+      let div = document.createElement("div");
+      div.classList.add("slide");
+      div.style.backgroundImage = `url(${image})`;
+      div.style.transform = `translateX(${100 * i}%)`;
+      attrs_img.appendChild(div);
+    });
+    attrs_name.textContent = name;
+    attrs_inf.textContent = cat + " at " + mrt;
+    attrs_description.textContent = description;
+    attrs_address.textContent = address;
+    attrs_transport.textContent = transport;
+    slider();
+  } catch (error) {
+    console.error("Error", error);
+  }
 };
 getAttractionsId();
 
@@ -125,15 +127,21 @@ function updatePrice() {
   }
 }
 
+function setInputDate() {
+  const today = new Date().toISOString().split("T")[0];
+  document.getElementById("booking_date").setAttribute("min", today);
+}
+setInputDate();
+
 //建立旅遊行程
-function CreateBooking() {
+const CreateBooking = async () => {
   const bookingDate = document.getElementById("booking_date");
   let bookingPrice = null;
   let bookingTime = null;
   if (morning.checked) {
     bookingTime = "早上9點至中午12點";
     bookingPrice = 2000;
-  } else {
+  } else if (afternoon.checked) {
     bookingTime = "下午2點至下午4點";
     bookingPrice = 2500;
   }
@@ -145,35 +153,35 @@ function CreateBooking() {
     bookingTime === null ||
     bookingPrice === null
   ) {
-    console.log("所有欄位皆須填寫，請勿空白");
+    notifyBox.classList.add("show");
+    notifyMsg.innerText = "所有欄位皆須填寫，\n 請勿空白";
   } else {
-    fetch(`/api/booking`, {
-      method: "POST",
-      body: JSON.stringify({
-        attractionId: attractionId,
-        date: bookingDate.value,
-        time: bookingTime,
-        price: bookingPrice,
-      }),
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        if (data !== null) {
-          window.location.href = `/booking`;
-        } else {
-          console.log("建立行程失敗");
-        }
-      })
-      .catch((error) => {
-        // console.log(error);
-        console.log("API呼叫失敗:" + error.message);
+    try {
+      const response = await fetch(`/api/booking`, {
+        method: "POST",
+        body: JSON.stringify({
+          attractionId: attractionId,
+          date: bookingDate.value,
+          time: bookingTime,
+          price: bookingPrice,
+        }),
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
       });
+      const data = await response.json();
+      console.log(data);
+      if (data !== null) {
+        window.location.href = `/booking`;
+      } else {
+        console.log("建立行程失敗");
+      }
+    } catch (error) {
+      // console.log(error);
+      console.log("API呼叫失敗:" + error.message);
+    }
   }
-}
+};
 const btnCreateBooking = document.querySelector(".booking_btn");
 btnCreateBooking.addEventListener("click", CreateBooking);

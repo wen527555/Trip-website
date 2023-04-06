@@ -11,6 +11,15 @@ let nextPage, keyword, attractionId;
 //初始化loading狀態為false，表示沒有正在載入中的資料
 let isLoading = false;
 
+const options = {
+  root: null,
+  rootMargin: "0px",
+  threshold: 0.2,
+};
+
+const footerObserver = new IntersectionObserver(callback, options);
+footerObserver.observe(footer);
+
 function appendCards(result) {
   let attractions = result.data;
   if (attractions == "") {
@@ -39,24 +48,24 @@ function appendCards(result) {
 
 //獲取景點資訊
 
-function getAttractions(page) {
+const getAttractions = async (page) => {
   let url = `/api/attractions?page=${page}`;
 
   if (keyword) {
     url += `&keyword=${keyword}`;
   }
-  isLoading = true;
-  fetch(url)
-    .then((response) => response.json())
-    .then((result) => {
-      appendCards(result);
-      nextPage = result.nextPage;
-    })
-    .catch((error) => console.error("Error", error))
-    .finally(() => {
-      isLoading = false;
-    });
-}
+  try {
+    isLoading = true;
+    const response = await fetch(url);
+    const result = await response.json();
+    appendCards(result);
+    nextPage = result.nextPage;
+  } catch (error) {
+    console.error("Error", error);
+  } finally {
+    isLoading = false;
+  }
+};
 
 getAttractions(0);
 
@@ -69,16 +78,17 @@ const getAttractionCard = document.addEventListener("click", (event) => {
 });
 
 //網頁加載後立即獲取 categoryList
-const getCategories = () => {
-  fetch("/api/categories")
-    .then((response) => response.json())
-    .then((result) => {
-      const categories = result.data.map((category) => {
-        return ` <button>${category}</button>`;
-      });
-      categoryList.innerHTML = categories.join("");
-    })
-    .catch((error) => console.error("Error", error));
+const getCategories = async () => {
+  try {
+    const response = await fetch("/api/categories");
+    const result = await response.json();
+    const categories = result.data.map((category) => {
+      return ` <button>${category}</button>`;
+    });
+    categoryList.innerHTML = categories.join("");
+  } catch (error) {
+    console.error("Error", error);
+  }
   categoryList.style.display = "none";
 };
 
@@ -125,12 +135,3 @@ function callback(entries) {
     getAttractions(nextPage);
   }
 }
-
-const options = {
-  root: null,
-  rootMargin: "0px",
-  threshold: 0.3,
-};
-
-const footerObserver = new IntersectionObserver(callback, options);
-footerObserver.observe(footer);

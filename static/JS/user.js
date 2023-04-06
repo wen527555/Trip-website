@@ -85,38 +85,37 @@ function getCookie(name) {
 }
 
 //會員狀態
-function getCurrentUser() {
+async function getCurrentUser() {
   if (!token) {
     btnSignOut.style.display = "none";
     btnOpenSignInFrom.style.display = "block";
   }
-  fetch(`/api/user/auth`, {
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + token,
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data["data"] != null) {
-        btnSignOut.style.display = "block";
-        btnOpenSignInFrom.style.display = "none";
-      } else {
-        btnSignOut.style.display = "none";
-        btnOpenSignInFrom.style.display = "block";
-      }
-    })
-    .catch((error) => {
-      // console.log(error);
-      console.log("API呼叫失敗:" + error.message);
+  try {
+    const response = await fetch(`/api/user/auth`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
     });
+    const data = await response.json();
+    if (data["data"] != null) {
+      btnSignOut.style.display = "block";
+      btnOpenSignInFrom.style.display = "none";
+    } else {
+      btnSignOut.style.display = "none";
+      btnOpenSignInFrom.style.display = "block";
+    }
+  } catch (error) {
+    // console.log(error);
+    console.log("API呼叫失敗:" + error.message);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", getCurrentUser);
 
 //會員註冊驗證
-function registerSystem() {
+async function registerSystem() {
   const emailRegex = /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/;
   const nameRegex = /^[\u4E00-\u9FA5a-zA-Z]{2,10}$/;
   const passwordPegex = /^(?=.*[A-Z]).{8,15}$/;
@@ -139,24 +138,25 @@ function registerSystem() {
     registerMsg.textContent = "密碼格式至少為8個字且需含一個大寫英文字母";
     hasMsg = true;
   } else {
-    fetch(`/api/user`, {
-      method: "POST",
-      body: JSON.stringify({
-        name: register_name.value,
-        email: register_email.value,
-        password: register_password.value,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        registerMsg.style.display = "block";
-        registerMsg.textContent = data["message"];
-        hasMsg = true;
-      })
-      .catch((error) => console.log(error));
+    try {
+      const response = await fetch(`/api/user`, {
+        method: "POST",
+        body: JSON.stringify({
+          name: register_name.value,
+          email: register_email.value,
+          password: register_password.value,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      registerMsg.style.display = "block";
+      registerMsg.textContent = data["message"];
+      hasMsg = true;
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 registerBtn.addEventListener("click", registerSystem);
@@ -167,50 +167,64 @@ const signInMsg = document.querySelector(".signInMsg");
 // const token = localStorage.getItem("access_token");
 // localStorage.setItem("access_token", token);
 
-function logInSystem() {
-  fetch(`/api/user/auth`, {
-    method: "PUT",
-    body: JSON.stringify({
-      email: logIn_email.value,
-      password: logIn_password.value,
-    }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      if (data["ok"]) {
-        location.reload();
-      } else {
-        signInMsg.style.display = "block";
-        signInMsg.textContent = data["message"];
-        hasMsg = true;
-      }
-    })
-    .catch((error) => console.log(error));
+async function logInSystem() {
+  try {
+    const response = await fetch(`/api/user/auth`, {
+      method: "PUT",
+      body: JSON.stringify({
+        email: logIn_email.value,
+        password: logIn_password.value,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    console.log(data);
+    if (data["ok"]) {
+      location.reload();
+    } else {
+      signInMsg.style.display = "block";
+      signInMsg.textContent = data["message"];
+      hasMsg = true;
+    }
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 signInBtn.addEventListener("click", logInSystem);
 
 //會員登出
-const logOutUser = btnSignOut.addEventListener("click", () => {
-  fetch(`/api/user/auth`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data["ok"]) {
-        btnSignOut.classList.remove("show");
-        btnOpenSignInFrom.classList.remove("show");
-        window.location.reload();
-      } else {
-        console.log("登出失敗");
-      }
-    })
-    .catch((error) => console.log(error));
-});
+async function logOutUser() {
+  try {
+    const response = await fetch(`/api/user/auth`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    if (data["ok"]) {
+      btnSignOut.classList.remove("show");
+      btnOpenSignInFrom.classList.remove("show");
+      window.location.reload();
+    } else {
+      console.log("登出失敗");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+btnSignOut.addEventListener("click", logOutUser);
+
+const notifyBox = document.querySelector(".notify_box");
+const btnCloseNotify = document.querySelector(".btn_close_notify");
+const notifyMsg = document.querySelector(".notify_message");
+
+//付款狀態通知
+const closeNotify = function () {
+  notifyBox.classList.remove("show");
+};
+btnCloseNotify.addEventListener("click", closeNotify);
