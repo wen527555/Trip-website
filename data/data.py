@@ -1,22 +1,21 @@
 import json
 from mysql.connector import pooling
 import json,re
-# dbconfig = {
-#   "database": "taipei_trip",
-#   "password": "wh1999ne123",
-#   "user":"root",
-#   "host":"localhost"
-# }
+import os
+from dotenv import load_dotenv
+load_dotenv()
+DATABASE_NAME = os.getenv('DATABASE_NAME')
+DB_USER = os.getenv('DB_USER')
+DB_PASSWORD = os.getenv('DB_PASSWORD')
 
-#建立連接池
-connection_pooling=pooling.MySQLConnectionPool( pool_name="mypool",
-                                                pool_size=5, 
-                                                pool_reset_session='True', 
-                                                database="taipei_trip",
-                                                password="wh1999ne123",
-                                                user="root",
-                                                host="localhost"
-                                                )
+connection_pooling=pooling.MySQLConnectionPool(
+                                            pool_name="mypool",
+                                            pool_size=5,
+                                            pool_reset_session='True',
+                                            host='localhost',
+                                            database=DATABASE_NAME,
+                                            user=DB_USER,
+                                            password=DB_PASSWORD)
 
 #讀取JSON檔
 
