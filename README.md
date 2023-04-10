@@ -1,10 +1,10 @@
 # Taipei-Trip-website
 
-#### Taipei-Day-Trip is an e-commerce website that allows users to search for and book one-day tour trips in Taipei City.
+Taipei-Trip is an e-commerce website that allows users to search for and book one-day tour trips in Taipei City.
 
-* Website URL: [http://13.112.131.32:3000/](http://35.73.146.114:3000/)
+#### Website URL : [http://13.112.131.32:3000/](http://35.73.146.114:3000/)
 
-#### test:
+### Test
 
 Test account  | Test password
 ------------- | -------------
@@ -12,26 +12,29 @@ Alanna@gmail.com  | Alanna123
 
 
 
-#### Test Credit Card Information:
+### Test Credit Card Information
 
-- Credit Card number（卡片號碼）: 4242 4242 4242 4242
-- Credit Card Expiration Dates （過期時間）: 02/42
-- Credit Card CVV Code （驗證密碼）: 123
+Credit Card  | Info
+------------- | -------------
+Credit Card number  | 4242 4242 4242 4242
+Expiration Dates  | 02/42
+CVV Code  | 123
+
 
 ## Table of Contents
 
-- Demo
-- Main Features
-- Frontend Technique
-+ Backend Technique
-  + Environment
-  + Database
-  + Cloud Services
-  + Version Control
-- Architecture
-- Database Schema
-- API Doc
-- Contact
+- [Demo](#demo)
+- [Main Features](#main-features)
+- [Frontend Technique](#frontend-technique)
+- [Backend Technique]((#backend-technique))
+  - [Environment](#environment)
+  - [Database](#database)
+  - [Cloud Services](#cloud-services)
+  - [Version Control](#version-control)
+- [Architecture](#architecture)
+- [Database Schema](#database-schema)
+- [API Doc](#api-doc)
+- [Contact](#contact)
 
 ## Demo
 ## Main Features
@@ -59,7 +62,6 @@ Alanna@gmail.com  | Alanna123
 #### Key Points
 - JWT authentication
 - Third-party Payment Service
-- 
 #### Environment
 - Python (flask)
 #### Database
