@@ -163,3 +163,16 @@ def order_get(orderNumber):
 
     finally:
         connection_object.close()
+
+
+#建立歷史行程
+# @order_blueprint.route('/api/history',methods=['GET'])
+# @jwt_required()
+# def history_get(orderNumber):
+
+#     try:
+#         user_email=get_jwt_identity()
+#         if not user_email:
+#             return jsonify({"error":True,"message":"未登入，拒絕存取"}),403
+#         connection_object=connection_pooling.get_connection()
+#         with connection_object.cursor(dictionary=True) as mycursor:
