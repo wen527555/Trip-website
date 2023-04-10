@@ -63,6 +63,7 @@ CVV Code  | 123
 - JWT authentication
 - Third-party Payment Service
 - MVC Pattern
+- Third normal form (3NF)
 
 #### Environment
 - Python (flask)
