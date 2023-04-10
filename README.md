@@ -62,6 +62,8 @@ CVV Code  | 123
 #### Key Points
 - JWT authentication
 - Third-party Payment Service
+- MVC Pattern
+
 #### Environment
 - Python (flask)
 #### Database
@@ -73,7 +75,10 @@ CVV Code  | 123
 
 ## Architecture
 ## Database Schema
+
 ## API Doc
+[API Doc](https://app.swaggerhub.com/apis-docs/padax/taipei-day-trip/1.1.0)
+
 ## Contact
 - Developer: Chia Wen Ho
 
