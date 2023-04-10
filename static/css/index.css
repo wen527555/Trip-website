@@ -12,51 +12,6 @@ body {
   justify-self: center;
 }
 
-nav {
-  display: grid;
-  grid-row: 1/2;
-  grid-template-columns: auto minmax(300px, 1200px) auto;
-  position: sticky;
-  background-color: #ffffff;
-  z-index: 200;
-  top: 0;
-}
-
-nav > .nav_box {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-column: 2/3;
-  align-content: center;
-}
-
-nav > .nav_box > .nav_title > a {
-  font-weight: 700;
-  font-size: 30px;
-  color: #448899;
-  text-decoration: none;
-  padding-left: 10px;
-}
-nav > .nav_box > .nav_items {
-  display: grid;
-  grid-auto-flow: column;
-  justify-content: end;
-  padding-right: 10px;
-}
-nav > .nav_box > .nav_items > .nav_item {
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 13px;
-  color: #666666;
-  border: 0;
-  background-color: #ffffff;
-  padding-right: 10px;
-  cursor: pointer;
-}
-
-nav > .nav_box > .nav_items > .nav_item:hover {
-  color: #448899;
-}
-
 header {
   display: grid;
   grid-row: 2/3;
