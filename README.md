@@ -23,7 +23,6 @@ CVV Code  | 123
 
 ## Table of Contents
 
-- [Demo](#demo)
 - [Main Features](#main-features)
 - [Frontend Technique](#frontend-technique)
 - [Backend Technique]((#backend-technique))
@@ -31,24 +30,23 @@ CVV Code  | 123
   - [Database](#database)
   - [Cloud Services](#cloud-services)
   - [Version Control](#version-control)
-- [Architecture](#architecture)
-- [Database Schema](#database-schema)
 - [API Doc](#api-doc)
 - [Contact](#contact)
 
-## Demo
+
 ## Main Features
 
-+ Attraction
-  + Ability for user to search for related attractions with keywords.
-  + Custom image carousel for showcasing attractions.
++ Attraction 
+  + Provides the function of keyword searching for related attractions.
+  + Customized image carousel feature to showcase pictures of various attractions..
 
 + Membership System
-  + User membership system with regex form validation to ensure data accuracy.
+  + Uses regular expression form validation to ensure the accuracy of member information.
   + Member verification uses JSON Web Tokens.
 
 + Order and payment
-  + Online payment system with Tappay for easy and secure transactions.
+  + Adopts Tappay online payment system for convenient and secure transactions.
+  + Clearly view historical booking records.
 
 ## Frontend Technique
 
@@ -59,11 +57,8 @@ CVV Code  | 123
 - AJAX
 
 ## Backend Technique
-#### Key Points
 - JWT authentication
 - Third-party Payment Service
-- MVC Pattern
-- Third normal form (3NF)
 
 #### Environment
 - Python (flask)
@@ -74,8 +69,6 @@ CVV Code  | 123
 #### Version Control
 - Git/GitHub
 
-## Architecture
-## Database Schema
 
 ## API Doc
 [API Doc](https://app.swaggerhub.com/apis-docs/padax/taipei-day-trip/1.1.0)
