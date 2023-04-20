@@ -8,6 +8,7 @@ from api.booking import booking_blueprint
 from api.order import order_blueprint
 from api.user import user_blueprint
 from api.index import index_blueprint
+from api.history import history_blueprint
 
 
 app=Flask(__name__)
@@ -43,6 +44,7 @@ app.register_blueprint(booking_blueprint)
 app.register_blueprint(order_blueprint)
 app.register_blueprint(user_blueprint)
 app.register_blueprint(index_blueprint)
+app.register_blueprint(history_blueprint)
 
 
 

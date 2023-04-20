@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% include 'components/head.html'%}
+    <link rel="stylesheet" type="text/css" href="../static/css/public.css" />
+    <link rel="stylesheet" type="text/css" href="../static/css/history.css" />
+  </head>
+  <body>
+    {% include 'components/navbar.html'%}
+    <main class="history_info">
+      <div class="history_Container">
+        <div class="history_title">歷史購買紀錄</div>
+      </div>
+    </main>
+    {% include 'components/footer.html'%}{% include 'components/signIn.html'%}
+    {% include 'components/register.html'%}
+    <div class="overlay"></div>
+    <script src="../static/JS/user.js"></script>
+    <script src="../static/JS/history.js"></script>
+  </body>
+</html>

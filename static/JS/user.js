@@ -229,6 +229,16 @@ async function logOutUser() {
 
 btnSignOut.addEventListener("click", logOutUser);
 
+//歷史購物紀錄
+const BtnHistoryPage = document.getElementById("nav_history");
+const nav_history = BtnHistoryPage.addEventListener("click", () => {
+  if (!token) {
+    openSignInFrom();
+  } else {
+    window.location.href = `/history`;
+  }
+});
+
 const notifyBox = document.querySelector(".notify_box");
 const btnCloseNotify = document.querySelector(".btn_close_notify");
 const notifyMsg = document.querySelector(".notify_message");
