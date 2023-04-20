@@ -1,5 +1,3 @@
-
-
 from flask import request
 from flask import *
 from flask import render_template
@@ -96,14 +94,13 @@ def booking_post():
                 mycursor.execute("SELECT id FROM user WHERE email=%s",[user_email])
                 result=mycursor.fetchone()       
                 user_id=result["id"]
-                #檢查是否有預定的行程
+                # #檢查是否有預定的行程
                 mycursor.execute("SELECT user_id FROM booking WHERE user_id=%s",[user_id])
                 pre_booking=mycursor.fetchone() 
                 if pre_booking:
                     mycursor.execute("DELETE FROM booking WHERE user_id=%s", [pre_booking["user_id"]])
                     connection_object.commit()                   
                 mycursor.execute("INSERT INTO booking (user_id, attraction_id, date, time, price) VALUES (%s, %s, %s, %s, %s)", [user_id, attractionId, date, time, price])
-
                 connection_object.commit()
                 data={
                     "attractionId":attractionId,

@@ -28,11 +28,13 @@ async function getOrder() {
     const date = trip.date;
     const time = trip.time;
     const price = order.price;
+    const image = attraction.image;
     const contactName = order.contact.name;
     const contactEmail = order.contact.email;
     const contactPhone = order.contact.phone;
 
     const renderInfo = `
+    <div class="thankInfo_left">
       <div class="thank_title2" id="thank_number">訂單編號：${number}</div>
       <div class="thank_title2">
         景點：
@@ -51,7 +53,10 @@ async function getOrder() {
       <div class="thank_title2">
         費用：
         <div class="thank_text" id="thank_price">新台幣${price}元</div>
-      </div>`;
+      </div>
+      </div>
+      <div class="thank_image" style="background-image: url('${image}')"></div>
+      `;
     const renderContact = `
       <div class="thank_title2">
       聯絡姓名：

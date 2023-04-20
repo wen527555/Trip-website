@@ -40,7 +40,6 @@ order_blueprint = Blueprint('order_blueprint', __name__)
 def order_post():
     try:
         order_data=request.json
-        print(order_data)
         prime=order_data["prime"]
         orders=order_data["orders"]
         trip=orders["trip"][0]
@@ -57,7 +56,10 @@ def order_post():
         connection_object=connection_pooling.get_connection()
         with connection_object.cursor(dictionary=True) as mycursor:
             orderNumber=time.strftime("%Y%m%d%H%M%S")+''.join(random.choices(string.ascii_letters + string.digits, k=6))
-            mycursor.execute("INSERT INTO orders (order_number, prime, attraction_id, attraction_name, attraction_address, attraction_images, date, time, price, contact_name, contact_email, contact_phone, payment_status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (orderNumber,prime ,attraction["id"], attraction["name"], attraction["address"], attraction["image"], trip["date"], trip["time"], totalPrice, contactName, contactEmail, contactPhone, '未付款'))
+            mycursor.execute("SELECT id FROM user WHERE email=%s",[user_email])
+            result=mycursor.fetchone()       
+            user_id=result["id"]
+            mycursor.execute("INSERT INTO orders (order_number, prime, attraction_id, attraction_name, attraction_address, attraction_images, date, time, price, contact_name, contact_email, contact_phone,user_id ,payment_status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s)", (orderNumber,prime ,attraction["id"], attraction["name"], attraction["address"], attraction["image"], trip["date"], trip["time"], totalPrice, contactName, contactEmail, contactPhone,user_id ,'未付款'))
             connection_object.commit()
             response = requests.post('https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime',
                                 headers={
@@ -123,7 +125,6 @@ def order_post():
 @jwt_required()
 def order_get(orderNumber):
     try:
-        print(orderNumber)
         user_email=get_jwt_identity()
         if not user_email:
             return jsonify({"error":True,"message":"未登入，拒絕存取"}),403
@@ -155,7 +156,6 @@ def order_get(orderNumber):
                     ,
                     "status":1                     
                 }
-                print(order_info)
                 return jsonify({"data":order_info}),200
 
     except Exception as e:
@@ -163,3 +163,5 @@ def order_get(orderNumber):
 
     finally:
         connection_object.close()
+
+

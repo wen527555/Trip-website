@@ -8,6 +8,7 @@ from api.booking import booking_blueprint
 from api.order import order_blueprint
 from api.user import user_blueprint
 from api.index import index_blueprint
+from api.history import history_blueprint
 
 
 app=Flask(__name__)
@@ -32,12 +33,18 @@ def booking():
 @app.route("/thankyou")
 def thankyou():
 	return render_template("thankyou.html")
-
+@app.route("/history")
+def history():
+	return render_template("history.html")
+@app.route("/member")
+def member():
+	return render_template("member.html")
 
 app.register_blueprint(booking_blueprint)
 app.register_blueprint(order_blueprint)
 app.register_blueprint(user_blueprint)
 app.register_blueprint(index_blueprint)
+app.register_blueprint(history_blueprint)
 
 
 

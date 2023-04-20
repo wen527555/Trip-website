@@ -258,10 +258,9 @@ TPDirect.card.onUpdate(function (update) {
   if (update.canGetPrime) {
     btnPayment.removeAttribute("disabled");
     btnPayment.addEventListener("click", onSubmit);
-    btnPayment.style.opacity = "100%";
   } else {
     btnPayment.removeEventListener("click", onSubmit);
-    btnPayment.style.opacity = "30%";
+    // btnPayment.style.opacity = "30%";
     btnPayment.setAttribute("disabled", true);
   }
 
@@ -318,7 +317,6 @@ function onSubmit(event) {
 
   // Get prime
   TPDirect.card.getPrime(function (result) {
-    console.log(result);
     if (result.status !== 0) {
       console.log("get prime error: " + result.msg);
       return;
@@ -336,7 +334,6 @@ function onSubmit(event) {
         },
       },
     };
-    console.log(orders);
     createOrder(orders);
   });
 }
@@ -353,22 +350,18 @@ async function createOrder(orders) {
       },
     });
     const result = await response.json();
-    console.log(result.data);
+    // console.log(result.data);
     const orderData = result.data;
     const orderNumber = orderData.number;
     console.log(orderData.payment.status);
     if (orderData.payment.status === 0) {
       window.location.href = `/thankyou?number=${orderNumber}`;
-      // notifyBox.classList.add("show");
-      // overlay.classList.add("show");
-      // notifyMsg.innerText = "訂單編號：" + orderNumber + "\n 付款成功！";
     } else {
       notifyBox.classList.add("show");
       notifyMsg.innerText =
         "訂單編號：" + orderNumber + "\n 付款失敗，\n 請檢查付款資訊是否正確";
     }
   } catch (error) {
-    // console.log(error);
     console.log("API呼叫失敗:" + error.message);
   }
 }

@@ -16,6 +16,9 @@ const logIn_password = document.getElementById("logIn_password");
 const register_email = document.getElementById("register_email");
 const register_password = document.getElementById("register_password");
 const register_name = document.getElementById("register_name");
+const btnMenu = document.getElementById("nav_menu");
+const menuList = document.querySelector(".menuList");
+
 const token = getCookie("access_token");
 const nav_booking = btnBookingPage.addEventListener("click", () => {
   if (!token) {
@@ -42,11 +45,17 @@ const closeModel = function () {
   signInModel.classList.remove("show");
   registerModel.classList.remove("show");
   overlay.classList.remove("show");
+  menuList.style.display = "none";
   clear_all();
 };
 
 const openSignInFrom = function () {
   signInModel.classList.add("show");
+  overlay.classList.add("show");
+};
+
+const openMenu = function () {
+  menuList.style.display = "block";
   overlay.classList.add("show");
 };
 
@@ -67,6 +76,7 @@ signInLink.addEventListener("click", turnToSignIn);
 btnCloseModel.forEach((btn) => btn.addEventListener("click", closeModel));
 overlay.addEventListener("click", closeModel);
 btnOpenSignInFrom.addEventListener("click", openSignInFrom);
+btnMenu.addEventListener("click", openMenu);
 
 const registerBtn = document.getElementById("register_button");
 const registerMsg = document.querySelector(".registerMsg");
@@ -87,7 +97,7 @@ function getCookie(name) {
 //會員狀態
 async function getCurrentUser() {
   if (!token) {
-    btnSignOut.style.display = "none";
+    btnMenu.style.display = "none";
     btnOpenSignInFrom.style.display = "block";
   }
   try {
@@ -100,10 +110,10 @@ async function getCurrentUser() {
     });
     const data = await response.json();
     if (data["data"] != null) {
-      btnSignOut.style.display = "block";
+      btnMenu.style.display = "block";
       btnOpenSignInFrom.style.display = "none";
     } else {
-      btnSignOut.style.display = "none";
+      btnMenu.style.display = "none";
       btnOpenSignInFrom.style.display = "block";
     }
   } catch (error) {
@@ -218,6 +228,16 @@ async function logOutUser() {
 }
 
 btnSignOut.addEventListener("click", logOutUser);
+
+//歷史購物紀錄
+const BtnHistoryPage = document.getElementById("nav_history");
+const nav_history = BtnHistoryPage.addEventListener("click", () => {
+  if (!token) {
+    openSignInFrom();
+  } else {
+    window.location.href = `/history`;
+  }
+});
 
 const notifyBox = document.querySelector(".notify_box");
 const btnCloseNotify = document.querySelector(".btn_close_notify");
