@@ -2,7 +2,7 @@
 
 Taipei-Trip is an e-commerce website that allows users to search for and book one-day tour trips in Taipei City.
 
-#### Website URL : [http://13.112.131.32:3000/](http://35.73.146.114:3000/)
+#### Website URL : [http://35.73.146.114:3000/](http://35.73.146.114:3000/)
 
 ### Test
 
