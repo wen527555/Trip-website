@@ -92,3 +92,21 @@ footer {
   margin-top: 50px;
   margin-left: 50px;
 }
+
+@media (max-width: 1200px) {
+  .history_info {
+    width: 900px;
+  }
+}
+
+@media (max-width: 900px) {
+  .history_info {
+    width: 670px;
+  }
+}
+
+@media (max-width: 670px) {
+  .history_info {
+    width: 580px;
+  }
+}

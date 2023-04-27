@@ -98,12 +98,11 @@ searchInput.addEventListener("click", () => {
   categoryList.style.display = "block";
 });
 
-//當點擊categoryList時將名稱添加到搜尋框中，並隱藏
+//當點擊categoryList時將名稱添加到搜尋框中
 
 categoryList.addEventListener("click", (event) => {
   if (event.target.tagName == "BUTTON") {
     searchInput.value = event.target.textContent;
-    categoryList.style.display = "none";
   }
 });
 

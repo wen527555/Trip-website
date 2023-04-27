@@ -19,7 +19,7 @@ const slider = function () {
   const slides = document.querySelectorAll(".slide");
   let curslide = 0;
   const maxSlide = slides.length - 1;
-  //functions
+
   const goToSlide = function (slide) {
     slides.forEach(
       (s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`)
@@ -70,7 +70,6 @@ const slider = function () {
   };
   init();
 
-  //Event handlers
   btnRight.addEventListener("click", nextSlide);
   btnLeft.addEventListener("click", preSlide);
 
@@ -178,7 +177,6 @@ const CreateBooking = async () => {
         console.log("建立行程失敗");
       }
     } catch (error) {
-      // console.log(error);
       console.log("API呼叫失敗:" + error.message);
     }
   }
