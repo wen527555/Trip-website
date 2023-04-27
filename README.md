@@ -31,6 +31,7 @@ CVV Code  | 123
   - [Database](#database)
   - [Cloud Services](#cloud-services)
   - [Version Control](#version-control)
+- [Architecture](#Architecture)
 - [API Doc](#api-doc)
 - [Contact](#contact)
 
@@ -51,9 +52,20 @@ CVV Code  | 123
   
 ## DEMO
 
-+ Infinite Scroll to reduced server and page load times 
-+ Attraction Image Carousel create a image slide show without any plug-ins.
+### Keyword Search
+#### input keywords of attraction names or select category names from the menu below.
 
+![scroll](/static/css/picture/GIF/keyword_search.gif)
+
+### Infinite Scroll
+#### create a seamless browsing experience and reduce server and page load times.
+
+![scroll](/static/css/picture/GIF/scroll.gif)
+
+### Attraction Image Carousel
+#### create a image slide show without any plug-ins.
+
+![slider](/static/css/picture/GIF/slider.gif)
 
 ## Frontend Technique
 
@@ -76,6 +88,8 @@ CVV Code  | 123
 #### Version Control
 - Git/GitHub
 
+## Architecture
+![Architecture](/static/css/picture/GIF/Architecture.png)
 
 ## API Doc
 [API Doc](https://app.swaggerhub.com/apis-docs/padax/taipei-day-trip/1.1.0)
