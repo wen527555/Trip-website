@@ -24,12 +24,14 @@ CVV Code  | 123
 ## Table of Contents
 
 - [Main Features](#main-features)
+- [DEMO](#DEMO)
 - [Frontend Technique](#frontend-technique)
 - [Backend Technique]((#backend-technique))
   - [Environment](#environment)
   - [Database](#database)
   - [Cloud Services](#cloud-services)
   - [Version Control](#version-control)
+- [Architecture](#Architecture)
 - [API Doc](#api-doc)
 - [Contact](#contact)
 
@@ -47,6 +49,23 @@ CVV Code  | 123
 + Order and payment
   + Adopts Tappay online payment system for convenient and secure transactions.
   + Clearly view historical booking records.
+  
+## DEMO
+
+### Keyword Search
+#### input keywords of attraction names or select category names from the menu below.
+
+![scroll](/static/css/picture/GIF/keyword_search.gif)
+
+### Infinite Scroll
+#### create a seamless browsing experience and reduce server and page load times.
+
+![scroll](/static/css/picture/GIF/scroll.gif)
+
+### Attraction Image Carousel
+#### create a image slide show without any plug-ins.
+
+![slider](/static/css/picture/GIF/slider.gif)
 
 ## Frontend Technique
 
@@ -69,6 +88,8 @@ CVV Code  | 123
 #### Version Control
 - Git/GitHub
 
+## Architecture
+![Architecture](/static/css/picture/GIF/Architecture.png)
 
 ## API Doc
 [API Doc](https://app.swaggerhub.com/apis-docs/padax/taipei-day-trip/1.1.0)
