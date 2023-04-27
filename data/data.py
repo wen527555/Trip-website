@@ -28,9 +28,7 @@ lis=data["result"]["results"]
 #上傳景點資料到資料庫
 for view in lis:
     name=view["name"]
-    # print(f'{name}')
     lng=view["longitude"]
-    # print(f'{lng}')
     lat=view["latitude"]
     transport=view["direction"]
     mrt=view["MRT"]
@@ -38,7 +36,6 @@ for view in lis:
     description=view["description"]
     address=view["address"]
     image1=view["file"].split("https")
-    # print(f'{image1}')
     image2 = ["https"+x for x in image1 if re.search("JPG", x)]
     image3 = ["https"+x for x in image1 if re.search("jpg", x)]
     images=",".join(image2+image3)

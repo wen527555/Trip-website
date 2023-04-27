@@ -80,6 +80,7 @@ header > .welcome > .welcome_search > .category_list {
   box-shadow: 0px 0px 20px #aabbcc;
   position: relative;
   z-index: 2;
+  display: none;
 }
 
 header > .welcome > .welcome_search > .category_list > button {
