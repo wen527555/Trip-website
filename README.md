@@ -24,6 +24,7 @@ CVV Code  | 123
 ## Table of Contents
 
 - [Main Features](#main-features)
+- [DEMO](#DEMO)
 - [Frontend Technique](#frontend-technique)
 - [Backend Technique]((#backend-technique))
   - [Environment](#environment)
@@ -47,6 +48,12 @@ CVV Code  | 123
 + Order and payment
   + Adopts Tappay online payment system for convenient and secure transactions.
   + Clearly view historical booking records.
+  
+## DEMO
+
++ Infinite Scroll to reduced server and page load times 
++ Attraction Image Carousel create a image slide show without any plug-ins.
+
 
 ## Frontend Technique
 
