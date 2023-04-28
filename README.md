@@ -24,15 +24,15 @@ CVV Code  | 123
 ## Table of Contents
 
 - [Main Features](#main-features)
-- [DEMO](#DEMO)
+- [DEMO](#demo)
 - [Frontend Technique](#frontend-technique)
 - [Backend Technique]((#backend-technique))
   - [Environment](#environment)
   - [Database](#database)
   - [Cloud Services](#cloud-services)
   - [Version Control](#version-control)
-- [Architecture](#Architecture)
-- [API Doc](#api-doc)
+- [Architecture](#architecture)
+- [Doc](#doc)
 - [Contact](#contact)
 
 
@@ -91,8 +91,13 @@ CVV Code  | 123
 ## Architecture
 ![Architecture](/static/css/picture/GIF/Architecture.png)
 
-## API Doc
-[API Doc](https://app.swaggerhub.com/apis-docs/padax/taipei-day-trip/1.1.0)
+## Doc
+
+API Doc：
+[https://app.swaggerhub.com/apis-docs/padax/taipei-day-trip/1.1.0](https://app.swaggerhub.com/apis-docs/padax/taipei-day-trip/1.1.0)
+
+Figma design draft：
+[https://www.figma.com/file/MZkYBH31H5gyLoZoZq116j](https://www.figma.com/file/MZkYBH31H5gyLoZoZq116j)
 
 ## Contact
 - Developer: Chia Wen Ho
