@@ -1,6 +1,6 @@
-# Taipei-Trip-website
+Trip-website
 
-Taipei-Trip is an e-commerce website that allows users to search for and book one-day tour trips in Taipei City.
+Trip is an e-commerce website that allows users to search for and book one-day tour trips in tainan City.
 
 #### Website URL : [http://35.73.146.114:3000/](http://35.73.146.114:3000/)
 
