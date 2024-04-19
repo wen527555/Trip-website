@@ -1,11 +1,9 @@
 
 
-Taipei-Trip is an e-commerce website that allows users to search for and book one-day tour trips .
 
 ## Table of Contents
 
 - [Main Features](#main-features)
-- [DEMO](#demo)
 - [Frontend Technique](#frontend-technique)
 - [Backend Technique]((#backend-technique))
   - [Environment](#environment)
@@ -13,8 +11,6 @@ Taipei-Trip is an e-commerce website that allows users to search for and book on
   - [Cloud Services](#cloud-services)
   - [Version Control](#version-control)
 - [Architecture](#architecture)
-- [Doc](#doc)
-- [Contact](#contact)
 
 
 ## Main Features
